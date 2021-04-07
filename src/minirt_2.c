@@ -3,27 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   minirt_2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyopark <hyopark@student.42seoul.com>      +#+  +:+       +#+        */
+/*   By: hyopark <hyopark@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 20:58:07 by hyopark           #+#    #+#             */
-/*   Updated: 2021/04/07 10:56:49 by hyopark          ###   ########.fr       */
+/*   Updated: 2021/04/07 20:36:23 by hyopark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "minirt.h"
-//#include "../mlx/mlx.h"
 
-#define SP 1
-#define PL 2
-#define TR 3
-#define SQ 4
-#define SY 5
+#include "minirt.h"
 
 t_vec	vec_mul(t_vec v, double r);
 double vec_len(t_vec vec)
 {
 	return (sqrt(vec.p.x * vec.p.x + vec.p.y * vec.p.y + vec.p.z * vec.p.z));
 }
-
 
 
 
