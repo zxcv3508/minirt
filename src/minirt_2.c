@@ -6,136 +6,18 @@
 /*   By: hyopark <hyopark@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 20:58:07 by hyopark           #+#    #+#             */
-/*   Updated: 2021/04/07 20:36:23 by hyopark          ###   ########.fr       */
+/*   Updated: 2021/04/07 22:43:30 by hyopark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-t_vec	vec_mul(t_vec v, double r);
-double vec_len(t_vec vec)
+int		make_rgb(t_col col)
 {
-	return (sqrt(vec.p.x * vec.p.x + vec.p.y * vec.p.y + vec.p.z * vec.p.z));
-}
+	int rgb;
 
-
-
-
-
-t_dot	make_dot(double x, double y, double z)
-{
-	t_dot re;
-
-	re.x = x;
-	re.y = y;
-	re.z = z;
-	return (re);
-}
-t_ray	make_ray(t_dot o, t_vec dir)
-{
-	t_ray re;
-
-	re.ori = o;
-	re.dir = dir;
-	return (re);
-}
-t_vec	make_vec(double x, double y, double z)
-{
-	t_vec re;
-
-	re.p.x = x;
-	re.p.y = y;
-	re.p.z = z;
-	return (re);
-}
-
-t_vec	unit_vec(t_vec v)
-{
-	t_vec re;
-	double dir = vec_len(v);
-	re.p.x = v.p.x / dir;
-	re.p.y = v.p.y / dir;
-	re.p.z = v.p.z / dir;
-	return (re);
-}
-t_dot	dot_plu(t_dot d1, t_dot d2)
-{
-	t_dot re;
-	re.x = d1.x + d2.x;
-	re.y = d1.y + d2.y;
-	re.z = d1.z + d2.z;
-
-	return (re);
-}
-
-t_dot   dot_mul(t_dot d1, t_dot d2)
- {
-         t_dot re;
-         re.x = d1.x * d2.x;
-         re.y = d1.y * d2.y;
-         re.z = d1.z * d2.z;
-
-         return (re);
-}
-
-double	vec_dot(t_vec v1, t_vec v2)
-{
-	double re;
-
-	re = v1.p.x * v2.p.x
-	 + v1.p.y * v2.p.y
-	 + v1.p.z * v2.p.z;
-	return (re);
-}
-
-t_vec	vec_cro(t_vec v1, t_vec v2)
-{
-	t_vec re;
-	re.p.x = v1.p.y * v2.p.z - v2.p.y * v1.p.z;
-	re.p.y = v1.p.z * v2.p.x - v2.p.z * v1.p.x;
-	re.p.z = v1.p.x * v2.p.y - v2.p.x * v1.p.y;
-
-	return (re);
-}
-
-t_vec	vec_plu(t_vec v1, t_vec v2)
-{
-	t_vec re;
-	re.p.x = v1.p.x + v2.p.x;
-	re.p.y = v1.p.y + v2.p.y;
-	re.p.z = v1.p.z + v2.p.z;
-	return (re);
-}
-
-double	vec_cos(t_vec v1, t_vec v2)
-{
-	return (vec_dot(v1, v2) / (vec_len(v1) * vec_len(v2)));
-}
-
-double	vec_sin(t_vec v1, t_vec v2)
-{
-	return (vec_len(vec_cro(v1, v2)) / (vec_len(v1) * vec_len(v2)));
-}
-
-t_vec	vec_sub(t_vec v1, t_vec v2)
-{
-	return (make_vec(v1.p.x - v2.p.x, v1.p.y - v2.p.y, v1.p.z - v2.p.z));
-}
-
-t_vec	make_vec_dot(t_dot d)
-{
-	t_vec re;
-
-	re.p = d;
-	return (re);
-}
-
-int     make_rgb(t_col col)
-{
-         int rgb;
-
-         rgb = (int)col.b + ((int)col.g << 8) + ((int)col.r << 16);
-         return (rgb);
+	rgb = (int)col.b + ((int)col.g << 8) + ((int)col.r << 16);
+	return (rgb);
 }
 
 t_col	rgb_to_col(int	rgb)
@@ -173,7 +55,7 @@ double	col_plu(t_col c1, t_col c2)
 }
 
 
-int	color(double r, double g, double b)
+int		color(double r, double g, double b)
 {
 	t_col	col;
 
@@ -189,7 +71,7 @@ double	hit_sph(t_sp o, t_ray r, double t_min, t_rec *rec)
 	t_vec oc ;
 
 	double tmp;
-	oc.p = dot_plu(r.ori, dot_mul(make_dot(-1.0,-1.0,-1.0), o.o));
+	oc = vec_plu(r.ori, vec_pow(vec_make(-1.0,-1.0,-1.0), o.o));
 	double a = vec_dot(r.dir, r.dir);
 	double hb =  vec_dot(oc, r.dir);
 	double c = vec_dot(oc, oc) - o.r*o.r;
@@ -205,9 +87,9 @@ double	hit_sph(t_sp o, t_ray r, double t_min, t_rec *rec)
 			rec->t = tmp;
 			rec->col = make_rgb(o.c);
 			rec->t_max = tmp;
-			rec->p = make_dot(r.ori.x + tmp * r.dir.p.x, r.ori.y + tmp * r.dir.p.y, r.ori.z + tmp * r.dir.p.z);
-			rec->n = make_vec_dot(dot_plu(rec->p, dot_mul(make_dot(-1,-1,-1), o.o)));
-			rec->n = unit_vec(make_vec_dot(dot_mul(rec->n.p, make_dot(1.0/o.r, 1.0/o.r, 1.0/o.r))));
+			rec->p = vec_make(r.ori.x + tmp * r.dir.x, r.ori.y + tmp * r.dir.y, r.ori.z + tmp * r.dir.z);
+			rec->normal = vec_plu(rec->p, vec_pow(vec_make(-1,-1,-1), o.o));
+			rec->normal = vec_unit(vec_pow(rec->normal, vec_make(1.0/o.r, 1.0/o.r, 1.0/o.r)));
 			return (1);
 		}
 		return (2);
@@ -234,13 +116,13 @@ double	hit_pl(t_pl o, t_ray r, double t_min, t_rec *rec)
 		rec->t_max = t;
 		rec->p = make_dot(r.ori.x + t * r.dir.p.x, r.ori.y + t * r.dir.p.y, r.ori.z + t * r.dir.p.z);
 		rec->p = vec_plu(make_vec_dot(r.ori),vec_mul(r.dir,t)).p;
-	//	rec->n = make_vec_dot(dot_plu(rec->p, dot_mul(make_dot(-1,-1,-1), o.o)));
+	//	rec->n = make_vec_dot(vec_plu(rec->p, dot_mul(make_dot(-1,-1,-1), o.o)));
 		rec->n = o.nv;
 		return (2);
 }
 	/*t_vec oc ;
 
-	oc.p = dot_plu(r.ori, dot_mul(make_dot(-1.0,-1.0,-1.0), o.o));
+	oc.p = vec_plu(r.ori, dot_mul(make_dot(-1.0,-1.0,-1.0), o.o));
 	double a = vec_dot(r.dir, r.dir);
 	double hb =  vec_dot(oc, r.dir);
 
@@ -252,7 +134,7 @@ double	hit_pl(t_pl o, t_ray r, double t_min, t_rec *rec)
 		{
 			rec->t = tmp;
 			rec->p = make_dot(r.ori.x + tmp * r.dir.p.x, r.ori.y + tmp * r.dir.p.y, r.ori.z + tmp * r.dir.p.z);
-			rec->n = make_vec_dot(dot_plu(rec->p, dot_mul(make_dot(-1,-1,-1), o.o)));
+			rec->n = make_vec_dot(vec_plu(rec->p, dot_mul(make_dot(-1,-1,-1), o.o)));
 			//rec->n = make_vec_dot(dot_mul(rec->n.p, make_dot(1.0/o.r, 1.0/o.r, 1.0/o.r)));
 		return (1);
 		}
@@ -267,7 +149,7 @@ double	hit_tr(t_tr o, t_ray r, double t_min, double t_max, t_rec *rec)
 {
 	t_vec oc ;
 
-	oc.p = dot_plu(r.ori, dot_mul(make_dot(-1.0,-1.0,-1.0), o.o));
+	oc.p = vec_plu(r.ori, dot_mul(make_dot(-1.0,-1.0,-1.0), o.o));
 	double a = vec_dot(r.dir, r.dir);
 	double hb =  vec_dot(oc, r.dir);
 	double c = vec_dot(oc, oc) - o.r*o.r;
@@ -281,7 +163,7 @@ double	hit_tr(t_tr o, t_ray r, double t_min, double t_max, t_rec *rec)
 		{
 			rec->t = tmp;
 			rec->p = make_dot(r.ori.x + tmp * r.dir.p.x, r.ori.y + tmp * r.dir.p.y, r.ori.z + tmp * r.dir.p.z);
-			rec->n = make_vec_dot(dot_plu(rec->p, dot_mul(make_dot(-1,-1,-1), o.o)));
+			rec->n = make_vec_dot(vec_plu(rec->p, dot_mul(make_dot(-1,-1,-1), o.o)));
 			rec->n = make_vec_dot(dot_mul(rec->n.p, make_dot(1.0/o.r, 1.0/o.r, 1.0/o.r)));
 		return (1);
 		}
@@ -290,7 +172,7 @@ double	hit_tr(t_tr o, t_ray r, double t_min, double t_max, t_rec *rec)
 		{
 			rec->t = tmp;
 			rec->p = make_dot(r.ori.x + tmp * r.dir.p.x, r.ori.y + tmp * r.dir.p.y, r.ori.z + tmp * r.dir.p.z);
-			rec->n = make_vec_dot(dot_plu(rec->p, dot_mul(make_dot(-1,-1,-1), o.o)));
+			rec->n = make_vec_dot(vec_plu(rec->p, dot_mul(make_dot(-1,-1,-1), o.o)));
 			rec->n = make_vec_dot(dot_mul(rec->n.p, make_dot(1.0/o.r, 1.0/o.r, 1.0/o.r)));
 		return (1);
 		}
@@ -314,11 +196,11 @@ double	hit_sq(t_sq o, t_ray r, double t_min, double t_max, t_rec *rec)
 	return (0);
 }
 
-double	hit_sy(t_sy o, t_ray r, double t_min, double t_max, t_rec *rec)
+double	hit_cy(t_cy o, t_ray r, double t_min, double t_max, t_rec *rec)
 {
 	t_vec oc ;
 
-	oc.p = dot_plu(r.ori, dot_mul(make_dot(-1.0,-1.0,-1.0), o.o));
+	oc.p = vec_plu(r.ori, dot_mul(make_dot(-1.0,-1.0,-1.0), o.o));
 	double a = vec_dot(r.dir, r.dir);
 	double hb =  vec_dot(oc, r.dir);
 	double c = vec_dot(oc, oc) - o.r*o.r;
@@ -332,7 +214,7 @@ double	hit_sy(t_sy o, t_ray r, double t_min, double t_max, t_rec *rec)
 		{
 			rec->t = tmp;
 			rec->p = make_dot(r.ori.x + tmp * r.dir.p.x, r.ori.y + tmp * r.dir.p.y, r.ori.z + tmp * r.dir.p.z);
-			rec->n = make_vec_dot(dot_plu(rec->p, dot_mul(make_dot(-1,-1,-1), o.o)));
+			rec->n = make_vec_dot(vec_plu(rec->p, dot_mul(make_dot(-1,-1,-1), o.o)));
 			rec->n = make_vec_dot(dot_mul(rec->n.p, make_dot(1.0/o.r, 1.0/o.r, 1.0/o.r)));
 		return (1);
 		}
@@ -341,7 +223,7 @@ double	hit_sy(t_sy o, t_ray r, double t_min, double t_max, t_rec *rec)
 		{
 			rec->t = tmp;
 			rec->p = make_dot(r.ori.x + tmp * r.dir.p.x, r.ori.y + tmp * r.dir.p.y, r.ori.z + tmp * r.dir.p.z);
-			rec->n = make_vec_dot(dot_plu(rec->p, dot_mul(make_dot(-1,-1,-1), o.o)));
+			rec->n = make_vec_dot(vec_plu(rec->p, dot_mul(make_dot(-1,-1,-1), o.o)));
 			rec->n = make_vec_dot(dot_mul(rec->n.p, make_dot(1.0/o.r, 1.0/o.r, 1.0/o.r)));
 		return (1);
 		}
@@ -364,7 +246,7 @@ int	hit_type(t_lst *lst, t_ray r, t_rec *rec)
 //		return (hit_sq(*((t_sq *)(lst->obj)),r,0,0xffffff,rec));/*
 // 	if (lst->type == SY)
 //		return (hit_sy(*((t_pl *)(lst->obj)),r,0,0xffffff,rec));
-return (0);
+	return (0);
 }
 
 t_vec	vec_ref(t_vec n, t_vec l)
@@ -392,15 +274,7 @@ double	make_diffuse(t_world *world, t_ray r, t_rec *rec, t_l *light)
 	return (light->r * fmax(vec_dot(unit_vec(rec->n), r_l.dir),0.0));
 }
 
-t_vec	vec_mul(t_vec v, double r)
-{
-	t_vec re;
 
-	re.p.x = v.p.x * r;
-	re.p.y = v.p.y * r;
-	re.p.z = v.p.z * r;
-	return(re);
-}
 
 double	make_spec(t_world *world, t_ray r, t_rec *rec, t_l *light)
 {
@@ -475,7 +349,7 @@ t_phong	trace_light(t_world *world, t_ray r, t_rec *rec)
 	return (re);
 }
 
-int ray_col(t_world **world, t_ray r)
+int		ray_col(t_world **world, t_ray r)
 {
 	t_lst *obj_l;
 	t_lst *lig_l;
@@ -508,7 +382,7 @@ int ray_col(t_world **world, t_ray r)
 	return (0);
 }
 
-int check_word(char **word, int n)
+int		check_word(char **word, int n)
 {
 	int i;
 
@@ -647,7 +521,7 @@ t_col	save_col(char **splited)
 	return (re);
 }
 
-int pasing_tr(char **word, t_world **world)
+int		pasing_tr(char **word, t_world **world)
 {
 	t_tr *tr;
 
@@ -670,7 +544,7 @@ int pasing_tr(char **word, t_world **world)
 	return (0);	
 }
 
-int pasing_sq(char **word, t_world **world)
+int		pasing_sq(char **word, t_world **world)
 {
 	t_sq *sq;
 
@@ -693,7 +567,7 @@ int pasing_sq(char **word, t_world **world)
 	return (0);	
 }
 
-int pasing_pl(char **word, t_world **world)
+int		pasing_pl(char **word, t_world **world)
 {
 	t_pl *pl;
 
@@ -715,7 +589,7 @@ int pasing_pl(char **word, t_world **world)
 	return (0);	
 }
 
-int pasing_cy(char **word, t_world **world)
+int		pasing_cy(char **word, t_world **world)
 {
 	t_cy *cy;
 
@@ -739,7 +613,7 @@ int pasing_cy(char **word, t_world **world)
 	return (0);	
 }
 
-int pasing_l(char **word, t_world **world)
+int		pasing_l(char **word, t_world **world)
 {
 	t_l *l;
 
@@ -761,7 +635,7 @@ int pasing_l(char **word, t_world **world)
 	return (0);	
 }
 
-int pasing_c(char **word, t_world **world)
+int		pasing_c(char **word, t_world **world)
 {
 	t_cam *c;
 
@@ -785,7 +659,7 @@ int pasing_c(char **word, t_world **world)
 	return (0);	
 }
 
-int pasing_a(char **word, t_world **world)
+int		pasing_a(char **word, t_world **world)
 {
 	if (!check_word(word, 3))
 	{
@@ -802,7 +676,7 @@ int pasing_a(char **word, t_world **world)
 	return (0);	
 }
 
-int pasing_r(char **word, t_world **world)
+int		pasing_r(char **word, t_world **world)
 {
 
 	if (!check_word(word, 3))
@@ -825,7 +699,7 @@ int pasing_r(char **word, t_world **world)
 	return (0);
 }
 
-int pasing_sp(char **word, t_world **world)
+int		pasing_sp(char **word, t_world **world)
 {
 	t_sp *sp;
 
@@ -849,7 +723,7 @@ int pasing_sp(char **word, t_world **world)
 	return (0);	
 }
 
-int	pasing_format_check(char *line, t_world **world)
+int		pasing_format_check(char *line, t_world **world)
 {
 	char **word;
 
@@ -935,11 +809,12 @@ void	image_rend(t_info *info)
 	mlx_put_image_to_window(info->vars.mlx, info->vars.win, info->img.img, 0, 0);
 }
 
-double make_degrees(double radians) {
-    return radians * (M_PI/ 180.0);
+double		make_degrees(double radians)
+{
+	return radians * (M_PI/ 180.0);
 }
 
-t_vec check_vup(t_vec v, t_vec nv)
+t_vec		check_vup(t_vec v, t_vec nv)
 {
 	//if(vec_dot(v,nv) == 0.0)
 //	{
@@ -1017,11 +892,11 @@ void	make_world(t_world **world, int is_save)
 	cam_set(info, ((t_cam *)((*world)->c->obj)));
 	image_rend(info);
 	mlx_hook(info->vars.win, 2,  0, &key_press, info);
-    	mlx_loop(info->vars.mlx);
+	mlx_loop(info->vars.mlx);
 	free(info);
 }
 
-void free_world (t_world *world)
+void	free_world(t_world *world)
 {
 	lst_free(&(world->o));
 	lst_free(&(world->c));
@@ -1029,7 +904,7 @@ void free_world (t_world *world)
 	free(world);
 }
 
-int	pas_world(int fd, int is_save)
+int		pas_world(int fd, int is_save)
 {
 	char	*line;
 	int	i;
@@ -1049,28 +924,4 @@ int	pas_world(int fd, int is_save)
 	free(line);
 	free_world(world);
 	return (1);
-}
-
-
-int main(int ac, char **av)
-{
-	int	save;
-
-	if (ac <= 1 || ac >3)
-		return (printf("arg num error") * 0);
-	if (ac == 3)
-	{
-		if(ft_strnstr(av[2], "--save", 6))
-			save = 1;
-		else
-			return (printf("3arg error") * 0);
-	}
-	if (!ft_strncmp(&av[1][ft_strlen(av[1]) - 3], ".rt", 3))
-	{
-		if(!pas_world(open(av[1], O_RDONLY), save))
-			return(printf("error") * 0);
-	}
-	else
-		printf("not .rt file");
-	return (0);
 }

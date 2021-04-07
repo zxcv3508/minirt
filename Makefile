@@ -32,9 +32,11 @@ test : all
 	./$(NAME) ./rt/test.rt
 
 $(NAME) : $(LIBFTD)/$(LIBFT) $(MLXD)/$(MLX)
+	cd ./HEADING_42 && ./heading42.sh
 	$(CC) $(CFLAGS) -L $(LIBFTD) -lft -L $(MLXD) -lmlx $(FRAME) $(INCLUDE) -o $@ $(SRCD)/$(SRC)
 
 $(DNAME) :  $(LIBFTD)/$(LIBFT) $(MLXD)/$(MLX)
+	cd ./HEADING_42 && ./heading42.sh
 	$(CC) $(CFLAGS) $(DEBUG_FLAG) -L $(LIBFTD) -lft -L $(MLXD) -lmlx $(FRAME) $(INCLUDE) -o $@ $(SRCD)/$(SRC)
 $(LIBFTD)/$(LIBFT) :
 	$(MAKE) -C $(LIBFTD) all

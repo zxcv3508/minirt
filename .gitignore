@@ -3,3 +3,4 @@
 *.dSYM
 minirt
 *.swp
+.DS_Store
