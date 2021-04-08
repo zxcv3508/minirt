@@ -3,13 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   tmp.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyopark <hyopark@student.42seoul.com>      +#+  +:+       +#+        */
+/*   By: hyopark <hyopark@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 20:58:07 by hyopark           #+#    #+#             */
-/*   Updated: 2021/04/07 16:06:18 by hyopark          ###   ########.fr       */
+/*   Updated: 2021/04/08 16:09:39 by hyopark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "minirt.h"
+
 //#include "../mlx/mlx.h"
 
 #define SP 1
@@ -29,16 +29,16 @@ double vec_len(t_vec vec)
 
 
 
-t_dot	make_dot(double x, double y, double z)
+t_point	make_dot(double x, double y, double z)
 {
-	t_dot re;
+	t_point re;
 
 	re.x = x;
 	re.y = y;
 	re.z = z;
 	return (re);
 }
-t_ray	make_ray(t_dot o, t_vec dir)
+t_ray	make_ray(t_point o, t_vec dir)
 {
 	t_ray re;
 
@@ -65,9 +65,9 @@ t_vec	unit_vec(t_vec v)
 	re.p.z = v.p.z / dir;
 	return (re);
 }
-t_dot	dot_plu(t_dot d1, t_dot d2)
+t_point	dot_plu(t_point d1, t_point d2)
 {
-	t_dot re;
+	t_point re;
 	re.x = d1.x + d2.x;
 	re.y = d1.y + d2.y;
 	re.z = d1.z + d2.z;
@@ -75,9 +75,9 @@ t_dot	dot_plu(t_dot d1, t_dot d2)
 	return (re);
 }
 
-t_dot   dot_mul(t_dot d1, t_dot d2)
+t_point   dot_mul(t_point d1, t_point d2)
  {
-         t_dot re;
+         t_point re;
          re.x = d1.x * d2.x;
          re.y = d1.y * d2.y;
          re.z = d1.z * d2.z;
@@ -129,7 +129,7 @@ t_vec	vec_sub(t_vec v1, t_vec v2)
 	return (make_vec(v1.p.x - v2.p.x, v1.p.y - v2.p.y, v1.p.z - v2.p.z));
 }
 
-t_vec	make_vec_dot(t_dot d)
+t_vec	make_vec_dot(t_point d)
 {
 	t_vec re;
 
@@ -201,7 +201,7 @@ int			is_aligned(t_vec vec)
 	return (0);
 }
 
-int			is_inside(t_dot p1, t_dot p2, t_dot p3, t_dot p)
+int			is_inside(t_point p1, t_point p2, t_point p3, t_point p)
 {
 	t_vec	v1;
 	t_vec	v2;
@@ -221,7 +221,7 @@ int			is_inside(t_dot p1, t_dot p2, t_dot p3, t_dot p)
 	return (1);
 }
 
-int		is_inside_square(t_sq *square, t_dot p)
+int		is_inside_square(t_sq *square, t_point p)
 {
 	if (is_aligned(square->nv) == 100)
 	{
@@ -339,8 +339,8 @@ double	hit_tr(t_tr o, t_ray r, double t_min,  t_rec *rec)
 {
 	double t;
 	double d;
-	t_dot	to_hit;
-	t_dot	p;
+	t_point	to_hit;
+	t_point	p;
 	o.nv = unit_vec(vec_cro(vec_sub(make_vec_dot(o.s), make_vec_dot(o.f)), vec_sub(make_vec_dot(o.t),make_vec_dot(o.f))));
 	d = vec_dot(o.nv, r.dir);
 
@@ -364,7 +364,7 @@ double	hit_tr(t_tr o, t_ray r, double t_min,  t_rec *rec)
 double	hit_sq(t_sq o, t_ray r, double t_min,  t_rec *rec)
 {
 	double			root;
-	t_dot			p;
+	t_point			p;
 
 	root = vec_dot(vec_sub(make_vec_dot(o.o), make_vec_dot(r.ori)), o.nv) / vec_dot(o.nv, r.dir);
 	if (root < 0 || root < rec->t_min || root > rec->t_max)
@@ -742,9 +742,9 @@ void	free_split(char **s)
 	free(s);
 }
 
-t_dot	save_dot(char **splited)
+t_point	save_dot(char **splited)
 {
-	t_dot re;
+	t_point re;
 
 	re.x = ft_atod(splited[0]);
 	re.y = ft_atod(splited[1]);

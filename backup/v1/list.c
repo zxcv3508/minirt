@@ -6,7 +6,7 @@
 /*   By: hyopark <hyopark@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 19:46:17 by hyopark           #+#    #+#             */
-/*   Updated: 2021/04/07 19:45:13 by hyopark          ###   ########.fr       */
+/*   Updated: 2021/04/08 16:13:13 by hyopark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@
 
 double	vec_dot(t_vec v1, t_vec v2);
 
-t_dot	make_dot(double x, double y, double z);
-t_dot   dot_mul(t_dot d1, t_dot d2);
+t_point	make_dot(double x, double y, double z);
+t_point   dot_mul(t_point d1, t_point d2);
 typedef struct	s_rec{
-	t_dot	p;
+	t_point	p;
 	t_vec	n;
 	double	t;
 	int	ff;
@@ -31,7 +31,7 @@ typedef struct	s_rec{
 
 typedef struct	s_sph
 {
-	t_dot	cen;
+	t_point	cen;
 	double	rad;	
 }		t_sph;
 
@@ -40,7 +40,7 @@ typedef union	s_obj{
 }		t_obj;
 
 
-t_sph	make_sph(t_dot cen, double rad)
+t_sph	make_sph(t_point cen, double rad)
 {
 	t_sph re;
 	re.cen = cen;
@@ -64,9 +64,9 @@ t_vec	make_vec(double x, double y, double z)
 	return (re);
 }
 
-t_dot	make_dot(double x, double y, double z)
+t_point	make_dot(double x, double y, double z)
 {
-	t_dot re;
+	t_point re;
 
 	re.x = x;
 	re.y = y;
@@ -94,9 +94,9 @@ int     make_rgb(t_col col)
 }
 
 
-t_dot	dot_plu(t_dot d1, t_dot d2)
+t_point	dot_plu(t_point d1, t_point d2)
 {
-	t_dot re;
+	t_point re;
 	re.x = d1.x + d2.x;
 	re.y = d1.y + d2.y;
 	re.z = d1.z + d2.z;
@@ -104,9 +104,9 @@ t_dot	dot_plu(t_dot d1, t_dot d2)
 	return (re);
 }
 
-t_dot   dot_mul(t_dot d1, t_dot d2)
+t_point   dot_mul(t_point d1, t_point d2)
  {
-         t_dot re;
+         t_point re;
          re.x = d1.x * d2.x;
          re.y = d1.y * d2.y;
          re.z = d1.z * d2.z;
@@ -114,7 +114,7 @@ t_dot   dot_mul(t_dot d1, t_dot d2)
          return (re);
 }
 
-t_vec	make_vec_dot(t_dot d)
+t_vec	make_vec_dot(t_point d)
 {
 	t_vec re;
 
@@ -174,7 +174,7 @@ int ray_col(t_ray r)
 	return (0);
 }
 
-t_ray	make_ray(t_dot o, t_vec dir)
+t_ray	make_ray(t_point o, t_vec dir)
 {
 	t_ray re;
 
@@ -337,9 +337,9 @@ void	free_split(char **s)
 	free(s);
 }
 
-t_dot	save_dot(char **splited)
+t_point	save_dot(char **splited)
 {
-	t_dot re;
+	t_point re;
 
 	re.x = ft_atod(splited[0]);
 	re.y = ft_atod(splited[1]);
@@ -348,7 +348,7 @@ t_dot	save_dot(char **splited)
 	return (re);
 }
 
-int	range_check(int col, double min, double max)
+int	range_check( col, double min, double max)
 {
 	if (col >= min && col <= max)
 		return (1);
@@ -604,7 +604,7 @@ int	make_world(t_world **world, int is_save)
 	double v_w = a_r * v_h;
 	double f_l = 1.0;
 
-	t_dot ori = make_dot(0.0, 0.0, 0.0);
+	t_point ori = make_dot(0.0, 0.0, 0.0);
 	t_vec hor = make_vec(v_w, 0.0, 0.0);
 	t_vec ver = make_vec(0.0, v_h, 0.0);
 	t_vec llc = make_vec((ori.x - hor.p.x/2.0 - ver.p.x/2.0), (ori.y - hor.p.y/2.0 - ver.p.y/2.0), (ori.z - hor.p.z/2.0 - ver.p.z/2.0 - f_l));// 빼기 연산자 아니 연산자 다만들어야함

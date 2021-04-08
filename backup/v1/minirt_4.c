@@ -1,15 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minirt_2.c                                         :+:      :+:    :+:   */
+/*   minirt_4.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyopark <hyopark@student.42seoul.com>      +#+  +:+       +#+        */
+/*   By: hyopark <hyopark@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 20:58:07 by hyopark           #+#    #+#             */
-/*   Updated: 2021/04/06 18:03:43 by hyopark          ###   ########.fr       */
+/*   Updated: 2021/04/08 16:09:39 by hyopark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "minirt.h"
+
 //#include "../mlx/mlx.h"
 
 #define SP 1
@@ -29,16 +29,16 @@ double vec_len(t_vec vec)
 
 
 
-t_dot	make_dot(double x, double y, double z)
+t_point	make_dot(double x, double y, double z)
 {
-	t_dot re;
+	t_point re;
 
 	re.x = x;
 	re.y = y;
 	re.z = z;
 	return (re);
 }
-t_ray	make_ray(t_dot o, t_vec dir)
+t_ray	make_ray(t_point o, t_vec dir)
 {
 	t_ray re;
 
@@ -65,9 +65,9 @@ t_vec	unit_vec(t_vec v)
 	re.p.z = v.p.z / dir;
 	return (re);
 }
-t_dot	dot_plu(t_dot d1, t_dot d2)
+t_point	dot_plu(t_point d1, t_point d2)
 {
-	t_dot re;
+	t_point re;
 	re.x = d1.x + d2.x;
 	re.y = d1.y + d2.y;
 	re.z = d1.z + d2.z;
@@ -75,9 +75,9 @@ t_dot	dot_plu(t_dot d1, t_dot d2)
 	return (re);
 }
 
-t_dot   dot_mul(t_dot d1, t_dot d2)
+t_point   dot_mul(t_point d1, t_point d2)
  {
-         t_dot re;
+         t_point re;
          re.x = d1.x * d2.x;
          re.y = d1.y * d2.y;
          re.z = d1.z * d2.z;
@@ -129,7 +129,7 @@ t_vec	vec_sub(t_vec v1, t_vec v2)
 	return (make_vec(v1.p.x - v2.p.x, v1.p.y - v2.p.y, v1.p.z - v2.p.z));
 }
 
-t_vec	make_vec_dot(t_dot d)
+t_vec	make_vec_dot(t_point d)
 {
 	t_vec re;
 
@@ -680,9 +680,9 @@ void	free_split(char **s)
 	free(s);
 }
 
-t_dot	save_dot(char **splited)
+t_point	save_dot(char **splited)
 {
-	t_dot re;
+	t_point re;
 
 	re.x = ft_atod(splited[0]);
 	re.y = ft_atod(splited[1]);

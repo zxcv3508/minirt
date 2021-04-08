@@ -1,9 +1,10 @@
 #include "minirt.h"
 
-double	vec_len(t_vec vec)
+double	vec_size(t_vec vec)
 {
 	return (sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z));
 }
+
 
 t_vec	vec_make(double x, double y, double z)
 {
@@ -15,7 +16,7 @@ t_vec	vec_make(double x, double y, double z)
 	return (re);
 }
 
-t_ray	make_ray(t_dot o, t_vec dir)
+t_ray	make_ray(t_point o, t_vec dir)
 {
 	t_ray re;
 
@@ -33,15 +34,7 @@ t_vec	vec_unit(t_vec v)
 	re.z = v.z / dir;
 	return (re);
 }
-t_vec	vec_plu(t_vec d1, t_vec d2)
-{
-	t_vec re;
-	re.x = d1.x + d2.x;
-	re.y = d1.y + d2.y;
-	re.z = d1.z + d2.z;
 
-	return (re);
-}
 
 t_vec	vec_pow(t_vec d1, t_vec d2)
  {
