@@ -17,6 +17,15 @@ typedef struct	s_vec
 typedef t_vec	t_point;
 typedef t_vec	t_color;
 
+typedef struct	s_data
+{
+	void		*img;
+	char		*addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+}				t_data;
+
 typedef struct	s_vars
 {
 	void		*mlx;
@@ -26,7 +35,7 @@ typedef struct	s_vars
 
 typedef struct	s_ray
 {
-	t_point		orig;
+	t_point		origin;
 	t_vec		dir;
 }				t_ray;
 
@@ -39,15 +48,6 @@ typedef struct	s_rec
 	double		t_min;
 	t_color		albedo;
 }				t_rec;
-
-typedef struct	s_data
-{
-	void		*img;
-	char		*addr;
-	int			bits_per_pixel;
-	int			line_length;
-	int			endian;
-}				t_data;
 
 typedef struct	s_phong
 {
@@ -133,6 +133,7 @@ typedef struct	s_lst
 
 typedef struct	s_world
 {
+	t_vec	resolution;
 	t_amb	amb;
 	t_lst	*object;
 	t_lst	*light;

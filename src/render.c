@@ -15,32 +15,39 @@ void	make_world(t_world **world, int is_save)
 	free(info);
 }
 
-void	image_rend(t_info *info)
+
+t_color		ray_get_color(t_world *world)
+{
+	t_color		pixel_color;
+
+	pixel_color = color(0,0,0);
+	if (hit())
+		pixel_color = get_phong_color();
+	else
+		pixel_color = get_background_color();
+	return (pixel_color);
+}
+
+void		render(t_world	*world)
 {
 	int i;
 	int j;
-	double u;
-	double v;
-	t_vec v_tmp;
-	t_ray r_tmp;
-
-	j = info->world->r.y -1;
-	while (j >= 0)
+	t_vec primary_ray;
+	t_ray r_tmpixel_colorp;
+	
+	i = -1;
+	while (++i < height)
 	{
-		i = 0;
-		while(i < info->world->r.x)
+		j = 0;
+		while(++j < width)
 		{
-			u = (double)i / (double)(info->world->r.x-1.0);
-			v = (double)j / (double)(info->world->r.y-1.0);
-			v_tmp = vec_make(->llc.x + u * info->hor.x + v * info->ver.x - info->ori.x, info->llc.y + u * info->hor.y + v * info->ver.y - info->ori.y, info->llc.z + u * info->hor.z + v * info->ver.z - info->ori.z);
-			t_ray r_tmp = make_ray(info->ori, v_tmp);
-			//printf("%d, %d :",i,j);
-			info->rgb = ray_col(&(info->world), r_tmp);
-			my_mlx_pixel_put(&(info->img),i,j,info->rgb);
-			i++;
+			primary_ray = make_primary_ray();//v_tmp = vec_make(->llc.x + u * info->hor.x + v * info->ver.x - info->ori.x, info->llc.y + u * info->hor.y + v * info->ver.y - info->ori.y, info->llc.z + u * info->hor.z + v * info->ver.z - info->ori.z);
+			                                // t_ray r_tmp = make_ray(info->ori, v_tmp);
+			pixel_color = ray_get_color(primary_ray, world);
+			write_pixel_color_on_mlx_image();//		my_mlx_pixel_put(&(info->img),i,j,info->rgb);
+
 		}
-		j--;
-		}
+	}
 	mlx_put_image_to_window(info->vars.mlx, info->vars.win, info->img.img, 0, 0);
 }
 

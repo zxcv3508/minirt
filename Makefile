@@ -13,7 +13,6 @@ SRC = main.c\
 	parsing_type_2.c\
 	parsing_util_tool.c\
 	parsing_util_save.c\
-	parsing_util_init.c\
 	parsing_util_free.c\
 	render.c\
 	render_cam.c\
@@ -22,6 +21,8 @@ SRC = main.c\
 	hit_type.c\
 	lighting.c\
 	ray_color.c\
+	set_mlx.c\
+
 
 
 

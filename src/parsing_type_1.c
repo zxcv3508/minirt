@@ -16,8 +16,7 @@ int		pasing_c(char **word, t_world **world)
 		c->nv = save_dot(ft_split(word[2], ','));
 		c->r = ft_atod(word[3]);
 		world_lst_add(&((*world)->c), lst_cre((void *)c), 1);
-		//c->nv.p.y *= -1.0;//
-		//c->o.y *= -1.0;//
+		cam_set();//
 		free_split(word);
 		if (range_check(c->nv, -1.0, 1.0))
 			return (printf("range over") * 0);
