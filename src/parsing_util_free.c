@@ -30,8 +30,8 @@ void	lst_free(t_lst **lst)
 
 void	free_world(t_world *world)
 {
-	lst_free(&(world->o));
-	lst_free(&(world->c));
-	lst_free(&(world->l));
+	lst_free(&(world->object));
+	lst_free(&(world->cam));
+	lst_free(&(world->light));
 	free(world);
 }

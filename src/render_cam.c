@@ -1,26 +1,26 @@
 #include "minirt.h"
 
-void		cam_set(t_info *info, t_cam *c)
+void		cam_set(t_world **world,t_cam *camera)
 {
 	double theta;
 
-	theta = make_degrees(c->r);
-	info->v_h = 2.0 * tan(theta / 2.0);
-	info->v_w = info->world->r.x/info->world->r.y * info->v_h;
-	info->f_l = c->o.z;
-	info->ori = c->o;
-	info->w = vec_unit(vec_sub((info->ori), c->nv));
-	info->u = vec_unit(vec_cro(check_vup(vec_make(0.0, -1.0, 0.0), c->nv), info->w));
-	info->v = vec_unit(vec_cro(info->w,info->u));
-//	info->hor = vec_make(info->v_w * info->u.x, 0.0, 0.0);
-//	info->ver = vec_make(0.0, info->v_h * info->v.y, 0.0);
-//	info->llc = vec_make((info->ori.x - info->hor.x/2.0 - info->ver.x/2.0 - info->w.x), (info->ori.y - info->hor.y/2.0 - info->ver.y/2.0 - info->w.y), (info->ori.z - info->hor.z/2.0 - info->ver.z/2.0 - info->w.z));
-		printf("%f", c->nv.y);
-	info->hor = vec_mul(info->u, info->v_w);
-	printf(" xyz:%f,%f,%f ,%f\n ",info->hor.x,info->hor.y,info->hor.z, info->v_w);
-	info->ver = vec_mul(info->v, info->v_h);
-	info->llc = vec_sub(vec_sub(vec_sub((info->ori), vec_mul(info->hor, 0.5)), vec_mul(info->ver, 0.5)), info->w);
-	printf(" xyz:%f,%f,%f ,%f\n ",info->llc.x,info->llc.y,info->llc.z, info->v_w);
-//	info->llc = vec_make((info->ori.x - info->hor.p.x/2.0 - info->ver.p.x/2.0 - info->w.p.x), (info->ori.y - info->hor.p.y/2.0 - info->ver.p.y/2.0 - info->w.p.y), (info->ori.z - info->hor.p.z/2.0 - info->ver.p.z/2.0 - info->w.p.z));
+	theta = make_degrees(camera->fov);
+	camera->view_h = 2.0 * tan(theta / 2.0);
+	camera->view_w = (*world)->resolution.x/(*world)->resolution.y * camera->view_h;
+	camera->focal_lenght = camera->look_from.z;
+	//camera->look_from = camera->look_from;
+	camera->w = vec_unit(vec_sub((camera->look_from), camera->look_at));
+	camera->u = vec_unit(vec_cro(check_vup(vec_make(0.0, 1.0, 0.0), camera->look_at), camera->w));
+	camera->v = vec_unit(vec_cro(camera->w,camera->u));
+//	camera->hor = vec_make(camera->view_w * camera->u.x, 0.0, 0.0);
+//	camera->ver = vec_make(0.0, camera->view_h * camera->v.y, 0.0);
+//	camera->llc = vec_make((camera->ori.x - camera->hor.x/2.0 - camera->ver.x/2.0 - camera->w.x), (camera->ori.y - camera->hor.y/2.0 - camera->ver.y/2.0 - camera->w.y), (camera->ori.z - camera->hor.z/2.0 - camera->ver.z/2.0 - camera->w.z));
+		//printf("%f", camera->ld.y);
+	camera->horizontal = vec_mul(camera->u, camera->view_w);
+	printf(" xyz:%f,%f,%f ,%f\n ",camera->horizontal.x,camera->horizontal.y,camera->horizontal.z, camera->view_w);
+	camera->vertical = vec_mul(camera->v, camera->view_h);
+	camera->lower_left_corner = vec_sub(vec_sub(vec_sub((camera->look_from), vec_mul(camera->horizontal, 0.5)), vec_mul(camera->vertical, 0.5)), camera->w);
+	printf(" xyz:%f,%f,%f ,%f\n ",camera->lower_left_corner.x,camera->lower_left_corner.y,camera->lower_left_corner.z, camera->view_w);
+//	camera->llc = vec_make((camera->ori.x - camera->horizontal.p.x/2.0 - camera->ver.p.x/2.0 - camera->w.p.x), (camera->ori.y - camera->hor.p.y/2.0 - camera->ver.p.y/2.0 - camera->w.p.y), (camera->ori.z - camera->hor.p.z/2.0 - camera->ver.p.z/2.0 - camera->w.p.z));
 	
 }

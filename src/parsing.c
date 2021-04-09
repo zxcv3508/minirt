@@ -1,6 +1,6 @@
 #include "minirt.h"
 
-t_bool		parse_a_line(char *line, t_world *world)
+t_bool		parse_a_line(char *line, t_world **world)
 {
 	char	**word;
 
@@ -36,13 +36,13 @@ void		parse_world(t_world *world, char *argv[])
 	int		gnl_return;
 
 	line = NULL;
-	while ((gnl_return = get_next_line(fd, &line)) >= 0)
+	fd = open(argv[1], O_RDONLY);
+	while (get_next_line(fd, &line))
 	{
 		if(!parse_a_line(line, &world))
-			return (0);
-		free(line);
-		if (gnl_return == 0)
 			break ;
+		free(line);
 	}
+	world->camera_head = world->cam;
 	free(line);
 }

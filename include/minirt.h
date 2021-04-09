@@ -62,22 +62,6 @@ typedef struct		s_vec
 
 typedef t_vec		t_point;
 typedef t_vec		t_color;
-typedef struct		s_data
-{
-	void			*img;
-	char			*addr;
-	int				bits_per_pixel;
-	int				line_length;
-	int				endian;
-}					t_data;
-
-typedef struct		s_vars
-{
-	void			*mlx;
-	void			*win;
-	t_data			*image;
-}					t_vars;
-
 typedef struct		s_ray
 {
 	t_point			origin;
@@ -100,12 +84,12 @@ typedef struct		s_phong
 	double			diffuse;
 }					t_phong;
 
-typedef struct		s_l
+typedef struct		s_light
 {
 	t_point			origin;
 	double			r;
 	t_color			c;
-}					t_l;
+}					t_light;
 
 typedef struct		s_tr
 {
@@ -176,6 +160,22 @@ typedef struct		s_lst
 	struct s_lst	*next;
 }					t_lst;
 
+typedef struct		s_data
+{
+	void			*img;
+	char			*addr;
+	int				bits_per_pixel;
+	int				line_length;
+	int				endian;
+}					t_data;
+
+typedef struct		s_vars
+{
+	void			*mlx;
+	void			*win;
+	t_data			*image;
+}					t_vars;
+
 typedef struct		s_world
 {
 	t_vec			resolution;
@@ -184,6 +184,7 @@ typedef struct		s_world
 	t_lst			*light;
 	t_lst			*cam;
 	t_vars			*mlx_pointer;
+	t_lst			*camera_head;
 	int				is_save;
 }					t_world;
 
@@ -199,12 +200,7 @@ typedef struct		s_info
 /*
 ** Src is : ../src/check_argument.c
 */
-void				check_argument(int argc, char *argv[]);
-
-/*
-** Src is : ../src/color_util.c
-*/
-t_color				make_color(double r, double g, double b);
+int					check_argument(int ac, char **av);
 
 /*
 ** Src is : ../src/hit.c
@@ -214,8 +210,8 @@ int					hit_type(t_lst *lst, t_ray r, t_rec *rec);
 /*
 ** Src is : ../src/hit_type.c
 */
-double				hit_sph(t_sp o, t_ray r, double t_min, t_rec *rec);
-double				hit_pl(t_pl o, t_ray r, double t_min, t_rec *rec);
+int					hit_sph(t_sp o, t_ray r, double t_min, t_rec *rec);
+int					hit_pl(t_pl o, t_ray r, double t_min, t_rec *rec);
 double				hit_tr(t_tr o, t_ray r, double t_min, double t_max, t_rec *rec);
 double				hit_sq(t_sq o, t_ray r, double t_min, double t_max, t_rec *rec);
 double				hit_cy(t_cy o, t_ray r, double t_min, double t_max, t_rec *rec);
@@ -229,24 +225,20 @@ void				init_world(t_world *world, int argc);
 ** Src is : ../src/lighting.c
 */
 t_vec				vec_ref(t_vec n, t_vec l);
-double				make_diffuse(t_world *world, t_ray r, t_rec *rec, t_l *light);
-double				make_spec(t_world *world, t_ray r, t_rec *rec, t_l *light);
+t_color				make_diffuse(t_ray primary_ray
+								, t_rec *rec, t_light *light);
+t_color				make_spec(t_ray r, t_rec *rec, t_light *light);
 int					is_shadow(t_world *world,t_lst *o, t_lst *l, t_rec *rec);
 
 /*
 ** Src is : ../src/minirt.c
 */
-int					make_rgb(t_color col);
-t_color				rgb_to_col(int	rgb);
-t_color				col_mul(t_color c, double r);
-double				col_plu(t_color c1, t_color c2);
-int					color(double r, double g, double b);
 int					range_check(t_vec v, double min, double max);
 
 /*
 ** Src is : ../src/parsing.c
 */
-t_bool				parse_a_line(char *line, t_world *world);
+t_bool				parse_a_line(char *line, t_world **world);
 void				parse_world(t_world *world, char *argv[]);
 
 /*
@@ -291,22 +283,24 @@ int					check_word(char **word, int n);
 /*
 ** Src is : ../src/ray_color.c
 */
-t_color				get_phong_color();
-t_color				get_phong_light_from();
-t_color				ray_get_color(t_world *world);
+int					in_shaodw(t_lst *obj_list, t_ray shadow_ray);
+t_color				get_phong_light_from(t_world *world, t_ray primary_ray, t_rec *rec, t_light *light);
+t_color				get_phong_color(t_world *world, t_ray primary_ray, t_rec *rec);
+int 				hit(t_lst *obj_l, t_ray primary_ray, t_rec *rec);
+t_color				ray_get_color(t_world *world,t_ray primary_ray);
 
 /*
 ** Src is : ../src/render.c
 */
-void				make_world(t_world **world, int is_save);
-t_color				ray_get_color(t_world *world);
-void				render(t_world	*world);
-int					key_press(int keycode, t_info *info);
+void				write_pixel_color_on_mlx_image(t_data *data, int x, int y, int color);
+t_ray				make_primary_ray(t_world	*world, t_cam *camera, int i, int j);
+int					make_rgb(t_color col);
+void				render(t_world	*world, t_cam *camera);
 
 /*
 ** Src is : ../src/render_cam.c
 */
-void				cam_set(t_info *info, t_cam *c);
+void				cam_set(t_world **world,t_cam *camera);
 
 /*
 ** Src is : ../src/render_util.c
@@ -314,6 +308,7 @@ void				cam_set(t_info *info, t_cam *c);
 double				make_degrees(double radians);
 t_vec				check_vup(t_vec v, t_vec nv);
 void				my_mlx_pixel_put(t_data *data, int x, int y, int color);
+int					key_press(int keycode, t_world *world);
 
 /*
 ** Src is : ../src/set_mlx.c
@@ -332,6 +327,8 @@ t_vec				vec_mul(t_vec v, double r);
 double				vec_dot(t_vec v1, t_vec v2);
 t_vec				vec_cro(t_vec v1, t_vec v2);
 t_vec				vec_plu(t_vec v1, t_vec v2);
+t_vec				vec_max(t_vec v1, t_vec v2);
+t_vec				vec_min(t_vec v1, t_vec v2);
 double				vec_cos(t_vec v1, t_vec v2);
 double				vec_sin(t_vec v1, t_vec v2);
 t_vec				vec_sub(t_vec v1, t_vec v2);

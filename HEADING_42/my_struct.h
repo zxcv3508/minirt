@@ -17,22 +17,6 @@ typedef struct	s_vec
 typedef t_vec	t_point;
 typedef t_vec	t_color;
 
-typedef struct	s_data
-{
-	void		*img;
-	char		*addr;
-	int			bits_per_pixel;
-	int			line_length;
-	int			endian;
-}				t_data;
-
-typedef struct	s_vars
-{
-	void		*mlx;
-	void		*win;
-	t_data		*image;
-}				t_vars;
-
 typedef struct	s_ray
 {
 	t_point		origin;
@@ -55,12 +39,12 @@ typedef struct	s_phong
 	double		diffuse;
 }		t_phong;
 
-typedef struct	s_l
+typedef struct	s_light
 {
 	t_point	origin;
 	double	r;
 	t_color	c;
-}		t_l;
+}		t_light;
 
 typedef struct	s_tr
 {
@@ -131,6 +115,22 @@ typedef struct	s_lst
 	struct s_lst	*next;
 }		t_lst;
 
+typedef struct	s_data
+{
+	void		*img;
+	char		*addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+}				t_data;
+
+typedef struct	s_vars
+{
+	void		*mlx;
+	void		*win;
+	t_data		*image;
+}				t_vars;
+
 typedef struct	s_world
 {
 	t_vec	resolution;
@@ -139,6 +139,7 @@ typedef struct	s_world
 	t_lst	*light;
 	t_lst	*cam;
 	t_vars	*mlx_pointer;
+	t_lst	*camera_head;
 	int		is_save;
 }		t_world;
 

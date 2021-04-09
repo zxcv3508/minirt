@@ -15,7 +15,8 @@ t_vec	vec_ref(t_vec n, t_vec l)
 	return (vec_unit(re));
 }
 
-t_color	make_diffuse(t_ray r, t_rec *rec, t_l *light)
+t_color	make_diffuse(t_ray primary_ray
+, t_rec *rec, t_light *light)
 {
 	t_ray	r_l;
 	t_color	diffuse;
@@ -28,7 +29,7 @@ t_color	make_diffuse(t_ray r, t_rec *rec, t_l *light)
 
 
 
-t_color	make_spec(t_ray r, t_rec *rec, t_l *light)
+t_color	make_spec(t_ray r, t_rec *rec, t_light *light)
 {
 	t_ray	r_l;
 	t_color	specular;
@@ -44,14 +45,14 @@ int	is_shadow(t_world *world,t_lst *o, t_lst *l, t_rec *rec)
 	t_rec	rec_l;
 	t_ray	l_r;
 	int	is_hit;
-	t_l *light =(t_l *)(world->l->obj);
+	t_light *light =(t_light *)(world->light->obj);
 
 	is_hit = 0;
 		while (l != NULL)
 		{
 			l_r.origin
 	 = rec->p;
-			l_r.dir = vec_sub((light->o), (rec->p));
+			l_r.dir = vec_sub(light->origin, rec->p);
 			
 			if ((hit_type(o, l_r, &rec_l) > 0.0))
 				is_hit++;
@@ -63,8 +64,8 @@ int	is_shadow(t_world *world,t_lst *o, t_lst *l, t_rec *rec)
 // t_phong	trace_light(t_world *world, t_ray r, t_rec *rec)
 // {
 // 	t_phong	re;
-// 	t_lst	*l_l = (world->l);
-// 	t_l *light =(t_l *)(world->l->obj);
+// 	t_lst	*l_l = (world->light);
+// 	t_l *light =(t_l *)(world->light->obj);
 // 	t_lst *o = world->o;
 // 	t_ray	r_l;
 // 	int	i;

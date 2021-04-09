@@ -22,6 +22,8 @@ SRC = main.c\
 	lighting.c\
 	ray_color.c\
 	set_mlx.c\
+	check_argument.c\
+	init_world.c\
 
 
 

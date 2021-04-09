@@ -1,47 +1,83 @@
 #include "minirt.h"
 
-t_color		get_phong_color(t_world *world, t_ray r, t_rec *rec)
-{
-	t_color		light_color;
-	t_lst	*l_l = (world->l);
- 	t_l *light =(t_l *)(world->l->obj);
-		
-	light_color = color(0,0,0);
-	while (light)
-	{
-		light_color += get_phong_light_from(primary_ray, light, rec);
-		light = light->next;
-	}
-	light_color += global_ambient;
-	return (vec_min(rec.albedo * light_color, color(1, 1, 1));
+ t_ray	make_shadow_ray(t_ray primary_ray, t_light *light, t_rec *rec)
+ {
+	t_ray	shadow_ray;
+
+	shadow_ray.origin = rec->p;
+	shadow_ray.dir = vec_sub((light->origin), (rec->p));
+	return (shadow_ray);
+}
+int		in_shaodw(t_lst *obj_list, t_ray shadow_ray)
+{	
+	t_rec	shadow_rec;
+
+	if(hit(obj_list, shadow_ray, &shadow_rec))
+		return (1);
+	else
+		return (0);	
 }
 
-
-t_color		get_phong_light_from(t_ray primary_ray, t_rec *rec)
+t_color		get_phong_light_from(t_world *world, t_ray primary_ray, t_rec *rec, t_light *light)
 {
 	t_color	specular;
 	t_color	diffuse;
 	
-	make_shadowray();
-	if (in_shaodw())
-		return (make_color(0,0,0));
-	else
+	if (in_shaodw(world->object, make_shadow_ray(primary_ray, light, rec)))
+	 	return (vec_make(0,0,0));
+	 else
 	{
 		specular = make_spec(primary_ray, rec, light);
-		diffuse = make_diffuse();
+		diffuse = make_diffuse(primary_ray, rec, light);
 		return (vec_plu(specular, diffuse));
 	}
 }
 
-t_color		ray_get_color(t_world *world)
+t_color		get_phong_color(t_world *world, t_ray primary_ray, t_rec *rec)
+{
+	t_color		light_color;
+	t_lst	*light_list = (world->light);
+ 	t_light *light =(t_light *)(world->light->obj);
+		
+	light_color = vec_make(0,0,0);
+	while (light_list)
+	{
+		light_color = vec_plu(light_color, get_phong_light_from(world, primary_ray, rec, light));
+		light_list = light_list->next;
+	}
+	light_color = vec_plu(light_color, vec_mul(world->amb.c, world->amb.r)); //global_ambient;??? +? *?
+	return (vec_min(vec_pow(light_color, rec->albedo), vec_make(1.0, 1.0, 1.0)));
+}
+
+int 	hit(t_lst *obj_l, t_ray primary_ray, t_rec *rec)
+{
+	int is_hit;
+	
+	rec->t_max = 999.0;
+	while(obj_l)
+	{
+		is_hit = hit_type(obj_l, primary_ray, rec);
+		obj_l = obj_l->next;
+	}
+	if (is_hit)
+		return (1);
+	else
+		return (0);
+}
+
+
+
+t_color		ray_get_color(t_world *world,t_ray primary_ray)
 {
 	t_color		pixel_color;
+	t_rec		*rec;
 
-	pixel_color = color(0,0,0);
-	if (hit())
-		pixel_color = get_phong_color();
+	pixel_color = vec_make(0,0,0);
+	if (hit(world->object, primary_ray, rec))
+		vec_pow(pixel_color, get_phong_color(world, primary_ray, rec));
 	else
-		pixel_color = get_background_color();
+		pixel_color = vec_make(0.0,0.0,0.0);//get_background_color();
+		
 	return (pixel_color);
 }
 
