@@ -9,7 +9,6 @@ int			main(int argc, char *argv[])
 	if(!check_argument(argc, argv))
 		return (0);
 	init_world(&world, argc);
-
 	parse_world(&world, argv);
 	set_mlx(&world, &mlx_pointer);
 	render(&world, (t_cam *)(world.cam->obj));

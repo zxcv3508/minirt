@@ -89,6 +89,7 @@ typedef struct		s_light
 	t_point			origin;
 	double			r;
 	t_color			c;
+	double			len;
 }					t_light;
 
 typedef struct		s_tr
@@ -210,6 +211,7 @@ int					hit_type(t_lst *lst, t_ray r, t_rec *rec);
 /*
 ** Src is : ../src/hit_type.c
 */
+t_point				ray_at(t_ray *ray, double t);
 int					hit_sph(t_sp o, t_ray r, double t_min, t_rec *rec);
 int					hit_pl(t_pl o, t_ray r, double t_min, t_rec *rec);
 double				hit_tr(t_tr o, t_ray r, double t_min, double t_max, t_rec *rec);
@@ -287,14 +289,15 @@ int					in_shaodw(t_lst *obj_list, t_ray shadow_ray);
 t_color				get_phong_light_from(t_world *world, t_ray primary_ray, t_rec *rec, t_light *light);
 t_color				get_phong_color(t_world *world, t_ray primary_ray, t_rec *rec);
 int 				hit(t_lst *obj_l, t_ray primary_ray, t_rec *rec);
+void				rec_init(t_rec *rec);
 t_color				ray_get_color(t_world *world,t_ray primary_ray);
 
 /*
 ** Src is : ../src/render.c
 */
+int					make_rgb(t_color col);
 void				write_pixel_color_on_mlx_image(t_data *data, int x, int y, int color);
 t_ray				make_primary_ray(t_world	*world, t_cam *camera, int i, int j);
-int					make_rgb(t_color col);
 void				render(t_world	*world, t_cam *camera);
 
 /*

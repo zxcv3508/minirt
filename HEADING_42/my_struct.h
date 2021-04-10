@@ -44,6 +44,7 @@ typedef struct	s_light
 	t_point	origin;
 	double	r;
 	t_color	c;
+	double	len;
 }		t_light;
 
 typedef struct	s_tr

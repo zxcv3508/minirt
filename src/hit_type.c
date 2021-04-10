@@ -1,34 +1,49 @@
 #include "minirt.h"
+t_point	ray_at(t_ray *ray, double t)
+{
+	t_point at;
+
+	at = vec_plu(ray->origin, vec_mul(ray->dir, t));
+	return (at);
+}
+
 
 int	hit_sph(t_sp o, t_ray r, double t_min, t_rec *rec)
 {
 	t_vec oc ;
 
-	double tmp;
-	oc = vec_plu(r.origin, vec_pow(vec_make(-1.0,-1.0,-1.0), o.origin));
-	double a = vec_dot(r.dir, r.dir);
-	double hb =  vec_dot(oc, r.dir);
-	double c = vec_dot(oc, oc) - o.r*o.r;
-	double d = hb*hb - a*c;
+	double root;
+	double sqrted; 
+	double a;
+	double hb;
+	double c;
+	double d;
+	
+	oc = vec_sub(r.origin, o.origin);
+	a = vec_dot(r.dir, r.dir);
+	hb = vec_dot(oc, r.dir);
+	c = vec_dot(oc, oc) - (o.r * o.r);
+	d = hb * hb - a * c;
 
-	if (d >= 0.00001)
-	{
-		double root = sqrt(d);
-		tmp = (-1 * hb - root) / a;
-		if (tmp < rec->t_max && tmp > t_min)
-		{
-			printf("st : %f ", tmp);
-			rec->t = tmp;
-			rec->albedo = o.c;
-			rec->t_max = tmp;
-			rec->p = vec_make(r.origin.x + tmp * r.dir.x, r.origin.y + tmp * r.dir.y, r.origin.z + tmp * r.dir.z);
-			rec->normal = vec_plu(rec->p, vec_pow(vec_make(-1,-1,-1), o.origin));
-			rec->normal = vec_unit(vec_pow(rec->normal, vec_make(1.0/o.r, 1.0/o.r, 1.0/o.r)));
-			return (1);
-		}
-		return (2);
-	}
+	if (d < 0.0000001)
 		return (0);
+	else
+	{
+		sqrted = sqrt(d);
+		root = (-hb - sqrted) / a;
+		if (root < t_min || rec->t_max < root)
+		{
+			root = (-hb + sqrted) / a;
+			if (root < t_min || rec->t_max < root)
+				return (0);
+		}
+	}
+	// rec->t = root;
+	// rec->p = ray_at(&r, root);
+	// rec->normal = vec_unit(vec_mul(vec_sub(rec->p, o.origin), 1.0 / o.r)); 
+	rec->albedo = o.c;
+	rec->t_max = root;
+	return (1);
 }
 
 int	hit_pl(t_pl o, t_ray r, double t_min, t_rec *rec)
@@ -38,13 +53,13 @@ int	hit_pl(t_pl o, t_ray r, double t_min, t_rec *rec)
 	double	t;
 	t_vec	to_hit;
 	
-	d = vec_dot(o.nv, vec_unit(r.dir));
+	d = vec_dot(o.nv, r.dir);
 	if (fabs(d) < 0.000001)
 		return (0);
 	to_hit = vec_sub((o.origin), (r.origin));
 	t = vec_dot(to_hit, o.nv) / d;
 	if (t < t_min || t > rec-> t_max)
-		return (1);
+	{
 		rec->t = t;
 		rec->albedo = o.c;
 		rec->t_max = t;
@@ -52,6 +67,8 @@ int	hit_pl(t_pl o, t_ray r, double t_min, t_rec *rec)
 		rec->p = vec_plu((r.origin),vec_mul(r.dir,t));
 	//	rec->n = (vec_plu(rec->p, dot_mul(make_dot(-1,-1,-1), o.o)));
 		rec->normal = o.nv;
+		return (1);
+	}
 		return (2);
 }
 	/*t_vec oc ;vec_make= vec_plu(r.origin, dot_mul(make_dot(-1.0,-1.0,-1.0), o.o));
@@ -61,7 +78,7 @@ int	hit_pl(t_pl o, t_ray r, double t_min, t_rec *rec)
 	if (d <0.0)
 	{
 		double root = sqrt(d);
-		double tmp = (-1 * hb - root) / a;
+		double t = (-1 * hb - root) / a;
 		//if (tmp < t_max && tmp > t_min)
 		{
 			rec->t = tmp;

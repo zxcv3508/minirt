@@ -15,11 +15,11 @@ int		pasing_c(char **word, t_world **world)
 		c->look_from = save_dot(ft_split(word[1], ','));
 		c->look_at = save_dot(ft_split(word[2], ','));
 		c->fov = ft_atod(word[3]);
-		world_lst_add(&((*world)->cam), lst_cre((void *)c), 1);
 		cam_set(world, c);
+		world_lst_add(&((*world)->cam), lst_cre((void *)c), 1);
 		free_split(word);
-		if (range_check(c->look_at, -1.0, 1.0))
-			return (printf("range over") * 0);
+		// if (range_check(c->look_at, -1.0, 1.0))
+		// 	return (printf("range over") * 0);
 		return (1);
 	}
 	return (0);	
@@ -83,6 +83,7 @@ int		pasing_sp(char **word, t_world **world)
 		//if (!(range_check(sp->c.r, 0, 255) && range_check(sp->c.g, 0, 255) && range_check(sp->c.b, 0, 255) ))
 		//	return (printf("color ") * 0);
 		world_lst_add(&((*world)->object), lst_cre((void *)sp), 1);
+		printf("%f, %f, %f\n",sp->origin.x,sp->origin.y,sp->origin.z);
 		free_split(word);
 		return (1);
 	}

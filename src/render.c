@@ -15,6 +15,17 @@
 // 	free(info);
 // }
 
+int		make_rgb(t_color col)
+{
+	int rgb;
+
+	col.x *= 255;
+	col.y *= 255;
+	col.z *= 255;
+	rgb = (int)col.x + ((int)col.y << 8) + ((int)col.z << 16);
+	return (rgb);
+}
+
 void			write_pixel_color_on_mlx_image(t_data *data, int x, int y, int color)
 {
 	char	*dst;
@@ -32,20 +43,9 @@ t_ray	make_primary_ray(t_world	*world, t_cam *camera, int i, int j)
 	
 	u = (double)i / (double)(world->resolution.x - 1.0);
 	v = (double)j / (double)(world->resolution.y - 1.0);
-	primary_ray_dir = vec_sub(vec_plu((vec_mul(camera->lower_left_corner, u),vec_mul(camera->horizontal, v)), camera->vertical), camera->look_from);	
-	t_ray r_tmp = make_ray(camera->look_from, primary_ray_dir);
+	primary_ray_dir = vec_unit(vec_sub(vec_plu((vec_mul(camera->vertical, u),vec_mul(camera->horizontal, v)),camera->lower_left_corner), camera->look_from));
+	primary_ray = make_ray(camera->look_from, primary_ray_dir);
 	return (primary_ray);
-}
-
-int		make_rgb(t_color col)
-{
-	int rgb;
-
-	col.x *= 255;
-	col.y *= 255;
-	col.z *= 255;
-	rgb = (int)col.x + ((int)col.y << 8) + ((int)col.z << 16);
-	return (rgb);
 }
 
 void		render(t_world	*world, t_cam *camera)
@@ -58,14 +58,12 @@ void		render(t_world	*world, t_cam *camera)
 
 	height = world->resolution.x;
 	width = world->resolution.y;
-	i = -1;
-	while (++i < height)
+	j = height -1;
+	while (--j >= 0)
 	{
-		j = -1;
-		while(++j < width)
+		i = -1;
+		while(++i < width)
 		{
-		//v_tmp = vec_make(->llc.x + u * info->hor.x + v * info->ver.x - info->ori.x, info->llc.y + u * info->hor.y + v * info->ver.y - info->ori.y, info->llc.z + u * info->hor.z + v * info->ver.z - info->ori.z);
-		// t_ray r_tmp = make_ray(info->ori, v_tmp);
 			pixel_color = ray_get_color(world, make_primary_ray(world, camera, i, j));
 			write_pixel_color_on_mlx_image(world->mlx_pointer->image, i, j, make_rgb(pixel_color));//		my_mlx_pixel_put(&(info->img),i,j,info->rgb);
 		}
