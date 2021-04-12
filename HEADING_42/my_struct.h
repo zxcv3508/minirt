@@ -31,6 +31,7 @@ typedef struct	s_rec
 	double		t_max;
 	double		t_min;
 	t_color		albedo;
+	double		front_face;
 }				t_rec;
 
 typedef struct	s_phong

@@ -15,15 +15,15 @@ t_vec	vec_ref(t_vec n, t_vec l)
 	return (vec_unit(re));
 }
 
-t_color	make_diffuse(t_ray primary_ray
-, t_rec *rec, t_light *light)
+t_color	make_diffuse(t_ray primary_ray, t_rec *rec, t_light *light)
 {
 	t_ray	r_l;
 	t_color	diffuse;
 
 	r_l.origin = rec->p;
 	r_l.dir = vec_unit(vec_sub((light->origin), (rec->p)));
-	diffuse = vec_mul(light->c, light->r * fmax(vec_dot(vec_unit(rec->normal), vec_unit(r_l.dir)),0.0));
+	printf("diff dot:%f\n ", vec_dot(vec_unit(rec->normal), r_l.dir));
+	diffuse = vec_mul(light->c, light->r * fmax(vec_dot(vec_unit(rec->normal), r_l.dir),0.0));
 	return (diffuse);
 }
 
@@ -40,26 +40,26 @@ t_color	make_spec(t_ray r, t_rec *rec, t_light *light)
 	return (specular);
 }
 
-int	is_shadow(t_world *world,t_lst *o, t_lst *l, t_rec *rec)
-{
-	t_rec	rec_l;
-	t_ray	l_r;
-	int	is_hit;
-	t_light *light =(t_light *)(world->light->obj);
+// int	is_shadow(t_world *world,t_lst *o, t_lst *l, t_rec *rec)
+// {
+// 	t_rec	rec_l;
+// 	t_ray	l_r;
+// 	int	is_hit;
+// 	t_light *light =(t_light *)(world->light->obj);
 
-	is_hit = 0;
-		while (l != NULL)
-		{
-			l_r.origin
-	 = rec->p;
-			l_r.dir = vec_sub(light->origin, rec->p);
+// 	rec_init(&rec_l);
+// 	is_hit = 0;
+// 		while (l != NULL)
+// 		{
+// 			l_r.origin = rec->p;
+// 			l_r.dir = vec_sub(light->origin, rec->p);
 			
-			if ((hit_type(o, l_r, &rec_l) > 0.0))
-				is_hit++;
-			l = l->next;
-		}
-	return (is_hit);
-}
+// 			if ((hit_type(o, l_r, &rec_l) > 0.0))
+// 				is_hit++;
+// 			l = l->next;
+// 		}
+// 	return (is_hit);
+// }
 
 // t_phong	trace_light(t_world *world, t_ray r, t_rec *rec)
 // {

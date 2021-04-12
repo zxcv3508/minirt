@@ -76,6 +76,7 @@ typedef struct		s_rec
 	double			t_max;
 	double			t_min;
 	t_color			albedo;
+	double			front_face;
 }					t_rec;
 
 typedef struct		s_phong
@@ -212,7 +213,10 @@ int					hit_type(t_lst *lst, t_ray r, t_rec *rec);
 ** Src is : ../src/hit_type.c
 */
 t_point				ray_at(t_ray *ray, double t);
+void				set_face_normal(t_ray *r, t_rec *rec);
+void				get_record(t_rec *rec, double root, void *obj, t_ray *r);
 int					hit_sph(t_sp o, t_ray r, double t_min, t_rec *rec);
+int					hit_pl(t_pl o, t_ray r, double t_min, t_rec *rec);
 double				hit_tr(t_tr o, t_ray r, double t_min, double t_max, t_rec *rec);
 double				hit_sq(t_sq o, t_ray r, double t_min, double t_max, t_rec *rec);
 double				hit_cy(t_cy o, t_ray r, double t_min, double t_max, t_rec *rec);
@@ -226,10 +230,8 @@ void				init_world(t_world *world, int argc);
 ** Src is : ../src/lighting.c
 */
 t_vec				vec_ref(t_vec n, t_vec l);
-t_color				make_diffuse(t_ray primary_ray
-								, t_rec *rec, t_light *light);
+t_color				make_diffuse(t_ray primary_ray, t_rec *rec, t_light *light);
 t_color				make_spec(t_ray r, t_rec *rec, t_light *light);
-int					is_shadow(t_world *world,t_lst *o, t_lst *l, t_rec *rec);
 
 /*
 ** Src is : ../src/minirt.c
@@ -284,7 +286,7 @@ int					check_word(char **word, int n);
 /*
 ** Src is : ../src/ray_color.c
 */
-int					in_shaodw(t_lst *obj_list, t_ray shadow_ray);
+int					in_shadow(t_lst *obj_list, t_ray shadow_ray, t_light *light);
 t_color				get_phong_light_from(t_world *world, t_ray primary_ray, t_rec *rec, t_light *light);
 t_color				get_phong_color(t_world *world, t_ray primary_ray, t_rec *rec);
 int 				hit(t_lst *obj_l, t_ray primary_ray, t_rec *rec);
@@ -294,10 +296,10 @@ t_color				ray_get_color(t_world *world,t_ray primary_ray);
 /*
 ** Src is : ../src/render.c
 */
+void				render(t_world	*world, t_cam *camera);
+t_ray				make_primary_ray(t_world	*world, t_cam *camera, int i, int j);
 int					make_rgb(t_color col);
 void				write_pixel_color_on_mlx_image(t_data *data, int x, int y, int color);
-t_ray				make_primary_ray(t_world	*world, t_cam *camera, int i, int j);
-void				render(t_world	*world, t_cam *camera);
 
 /*
 ** Src is : ../src/render_cam.c

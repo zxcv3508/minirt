@@ -10,11 +10,17 @@
 	shadow_ray.dir = vec_unit(shadow_ray.dir);
 	return (shadow_ray);
 }
-int		in_shaodw(t_lst *obj_list, t_ray shadow_ray)
+int		in_shadow(t_lst *obj_list, t_ray shadow_ray, t_light *light)
 {	
 	t_rec	shadow_rec;
 
-	if(hit(obj_list, shadow_ray, &shadow_rec))
+	//rec_init(&shadow_rec);
+	shadow_rec.t_max = light->len;// 빛의 최대거리제한 = 히트포인트에서 빛의 원점까지
+	int a = (hit(obj_list, shadow_ray, &shadow_rec))	;
+	
+	//printf("in_shadow is_hit : %d\n", a);
+	//	if(hit(obj_list, shadow_ray, &shadow_rec))
+	if(a)
 		return (1);
 	else
 		return (0);	
@@ -25,12 +31,14 @@ t_color		get_phong_light_from(t_world *world, t_ray primary_ray, t_rec *rec, t_l
 	t_color	specular;
 	t_color	diffuse;
 	
-	if (in_shaodw(world->object, make_shadow_ray(primary_ray, light, rec)))
+	rec->t_max = 99999.0;
+	if (in_shadow(world->object, make_shadow_ray(primary_ray, light, rec), light))
 	 	return (vec_make(0,0,0));
 	 else
 	{
 		specular = make_spec(primary_ray, rec, light);
 		diffuse = make_diffuse(primary_ray, rec, light);
+	//	printf("s : %f, d : %f\n", specular.z,diffuse.z);
 		return (vec_plu(specular, diffuse));
 	}
 }
@@ -39,31 +47,31 @@ t_color		get_phong_color(t_world *world, t_ray primary_ray, t_rec *rec)
 {
 	t_color		light_color;
 	t_lst	*light_list = (world->light);
- 	t_light *light =(t_light *)(world->light->obj);
 		
 	light_color = vec_make(0,0,0);
 	while (light_list)
 	{
-		light_color = vec_plu(light_color, get_phong_light_from(world, primary_ray, rec, light));
+		light_color = vec_plu(light_color, get_phong_light_from(world, primary_ray, rec, (t_light *)(light_list->obj)));
 		light_list = light_list->next;
 	}
 	light_color = vec_plu(light_color, vec_mul(world->amb.c, world->amb.r)); //global_ambient;??? +? *?
-			printf("lihihtcol : %f,%f,%f\n", light_color.x,light_color.y,light_color.z);
-
+	//		printf("lihihtcol : %f,%f,%f\n", light_color.x,light_color.y,light_color.z);
 	return (vec_min(vec_pow(light_color, rec->albedo), vec_make(1.0, 1.0, 1.0)));
 }
 
 int 	hit(t_lst *obj_l, t_ray primary_ray, t_rec *rec)
 {
 	int is_hit;
-	
+	t_lst *tmp_obj;
+
+	tmp_obj = obj_l;
 	is_hit = 0;
-	while(obj_l)
-	{
-		is_hit += hit_type(obj_l, primary_ray, rec);
-		obj_l = obj_l->next;
-		//printf("ishit:%d\n", is_hit);
+	while(tmp_obj)
+	{	
+		is_hit += hit_type(tmp_obj, primary_ray, rec);
+		tmp_obj = tmp_obj->next;
 	}
+	//printf("is_hit in hit : %d\n", is_hit);
 	return(is_hit);
 }
 
@@ -82,9 +90,8 @@ t_color		ray_get_color(t_world *world,t_ray primary_ray)
 	pixel_color = vec_make(0,0,0);
 	if (hit(world->object, primary_ray, &rec))//rec-> col : closest hit color 
 	{
-		pixel_color = rec.albedo;
-		pixel_color = vec_pow(pixel_color, get_phong_color(world, primary_ray, &rec));
-		printf("phongcol : %f,%f,%f\n", get_phong_color(world, primary_ray, &rec).x,get_phong_color(world, primary_ray, &rec).y,get_phong_color(world, primary_ray, &rec).z);
+		pixel_color = vec_pow(rec.albedo, get_phong_color(world, primary_ray, &rec));
+	//	printf("phongcol : %f,%f,%f\n", get_phong_color(world, primary_ray, &rec).x,get_phong_color(world, primary_ray, &rec).y,get_phong_color(world, primary_ray, &rec).z);
 	}
 	else
 		pixel_color = vec_make(0.0,1.0,0.0);//get_background_color();//if non-hit : 0,0,0 

@@ -6,7 +6,23 @@ t_point	ray_at(t_ray *ray, double t)
 	at = vec_plu(ray->origin, vec_mul(ray->dir, t));
 	return (at);
 }
+void	set_face_normal(t_ray *r, t_rec *rec)
+{
+	// 광선의 방향벡터와 교점의 법선벡터의 내적이 음수이면 광선은 앞면(객체의)에 hit 한 것이다
+	rec->front_face = vec_dot(r->dir, rec->normal) < 0;
+	// 광선의 앞면에 hit 면 그대로 아니면 법선을 반대로 뒤집는다. (항상 광선 방향벡터와 법선 벡터를 반대인 상태로 사용하기위해)
+	if (rec->front_face)
+		rec->normal = rec->normal;
+	else
+		rec->normal = vec_mul(rec->normal, -1);
+}
 
+void		get_record(t_rec *rec, double root, void *obj, t_ray *r)
+{
+	//rec->texture = obj->texture;
+	rec->t = root;
+	rec->p = ray_at(r, root);
+}
 
 int	hit_sph(t_sp o, t_ray r, double t_min, t_rec *rec)
 {
@@ -29,48 +45,51 @@ int	hit_sph(t_sp o, t_ray r, double t_min, t_rec *rec)
 	// printf("rayx : %f, rayy : %f, rayz : %f\n",r.dir.x, r.dir.y,r.dir.z);
 	
  
-	if (d < 0.000001)
+	if (d < 0.000000)
+	{
+	
+	//	printf("d 문제\n");
 		return (0);
+	}
 	sqrted = sqrt(d);
 	root = (-hb - sqrted) / a;
+	//printf("max : %f , min : %f", t_min, rec->t_max);
 	if (root < t_min || rec->t_max < root)
 	{
-	//	root = (-hb + sqrted) / a;
+		root = (-hb + sqrted) / a;
 		if (root < t_min || rec->t_max < root)
 			return (0);
 	}
 	rec->t = root;
 	rec->p = ray_at(&r, root);
-	rec->normal = vec_mul(vec_sub(rec->p, o.origin), 1.0/o.r);
+	rec->normal = vec_mul(vec_sub(rec->p, o.origin), 1.0 / o.r);
+	//printf("nv: %f,%f,%f\n", rec->normal.x,rec->normal.y,rec->normal.z);
 	rec->albedo = o.c;
+	rec->t_max = root;
+	set_face_normal(&r, rec);
 	return (1);
 }
 
-// int	hit_pl(t_pl o, t_ray r, double t_min, t_rec *rec)
-// {
+int	hit_pl(t_pl o, t_ray r, double t_min, t_rec *rec)
+{
 
-// 	double	d;
-// 	double	t;
-// 	t_vec	to_hit;
-	
-// 	d = vec_dot(o.nv, r.dir);
-// 	if (fabs(d) < 0.000001)
-// 		return (0);
-// 	to_hit = vec_sub((o.origin), (r.origin));
-// 	t = vec_dot(to_hit, o.nv) / d;
-// 	if (t < t_min || t > rec-> t_max)
-// 	{
-// 		rec->t = t;
-// 		rec->albedo = o.c;
-// 		rec->t_max = t;
-// 		rec->p = vec_make(r.origin.x + t * r.dir.x, r.origin.y + t * r.dir.y, r.origin.z + t * r.dir.z);
-// 		rec->p = vec_plu((r.origin),vec_mul(r.dir,t));
-// 	//	rec->n = (vec_plu(rec->p, dot_mul(make_dot(-1,-1,-1), o.o)));
-// 		rec->normal = o.nv;
-// 		return (1);
-// 	}
-// 		return (2);
-// }
+	double	denom;
+	double	t;
+	t_vec	to_hit;
+
+	denom = vec_dot(o.nv, r.dir);
+	if (fabs(denom) < 1e-6)
+		return (FALSE);
+	to_hit = vec_sub(o.origin, r.origin);
+	t = vec_dot(to_hit, o.nv) / denom;
+	if (t < t_min || t > rec->t_max)
+		return (FALSE);
+	get_record(rec, t, &o, &r);
+	rec->normal = o.nv;
+	rec->albedo = o.c;
+	set_face_normal(&r, rec);
+	return (TRUE);
+}
 	/*t_vec oc ;vec_make= vec_plu(r.origin, dot_mul(make_dot(-1.0,-1.0,-1.0), o.o));
 	double a = vec_dot(r.dir, r.di;
 	double hb =  vec_dot(oc, r.dir);
