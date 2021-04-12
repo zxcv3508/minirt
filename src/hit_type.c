@@ -25,52 +25,52 @@ int	hit_sph(t_sp o, t_ray r, double t_min, t_rec *rec)
 	c = vec_dot(oc, oc) - (o.r * o.r);
 	d = hb * hb - a * c;
 
-	if (d < 0.0000001)
+	// printf("ocx : %f, ocy : %f, ocz : %f, a : %f, hb : %f, c : %f, d : %f\n",oc.x,oc.y,oc.z,a,hb,c,d);
+	// printf("rayx : %f, rayy : %f, rayz : %f\n",r.dir.x, r.dir.y,r.dir.z);
+	
+ 
+	if (d < 0.000001)
 		return (0);
-	else
+	sqrted = sqrt(d);
+	root = (-hb - sqrted) / a;
+	if (root < t_min || rec->t_max < root)
 	{
-		sqrted = sqrt(d);
-		root = (-hb - sqrted) / a;
+	//	root = (-hb + sqrted) / a;
 		if (root < t_min || rec->t_max < root)
-		{
-			root = (-hb + sqrted) / a;
-			if (root < t_min || rec->t_max < root)
-				return (0);
-		}
+			return (0);
 	}
-	// rec->t = root;
-	// rec->p = ray_at(&r, root);
-	// rec->normal = vec_unit(vec_mul(vec_sub(rec->p, o.origin), 1.0 / o.r)); 
+	rec->t = root;
+	rec->p = ray_at(&r, root);
+	rec->normal = vec_mul(vec_sub(rec->p, o.origin), 1.0/o.r);
 	rec->albedo = o.c;
-	rec->t_max = root;
 	return (1);
 }
 
-int	hit_pl(t_pl o, t_ray r, double t_min, t_rec *rec)
-{
+// int	hit_pl(t_pl o, t_ray r, double t_min, t_rec *rec)
+// {
 
-	double	d;
-	double	t;
-	t_vec	to_hit;
+// 	double	d;
+// 	double	t;
+// 	t_vec	to_hit;
 	
-	d = vec_dot(o.nv, r.dir);
-	if (fabs(d) < 0.000001)
-		return (0);
-	to_hit = vec_sub((o.origin), (r.origin));
-	t = vec_dot(to_hit, o.nv) / d;
-	if (t < t_min || t > rec-> t_max)
-	{
-		rec->t = t;
-		rec->albedo = o.c;
-		rec->t_max = t;
-		rec->p = vec_make(r.origin.x + t * r.dir.x, r.origin.y + t * r.dir.y, r.origin.z + t * r.dir.z);
-		rec->p = vec_plu((r.origin),vec_mul(r.dir,t));
-	//	rec->n = (vec_plu(rec->p, dot_mul(make_dot(-1,-1,-1), o.o)));
-		rec->normal = o.nv;
-		return (1);
-	}
-		return (2);
-}
+// 	d = vec_dot(o.nv, r.dir);
+// 	if (fabs(d) < 0.000001)
+// 		return (0);
+// 	to_hit = vec_sub((o.origin), (r.origin));
+// 	t = vec_dot(to_hit, o.nv) / d;
+// 	if (t < t_min || t > rec-> t_max)
+// 	{
+// 		rec->t = t;
+// 		rec->albedo = o.c;
+// 		rec->t_max = t;
+// 		rec->p = vec_make(r.origin.x + t * r.dir.x, r.origin.y + t * r.dir.y, r.origin.z + t * r.dir.z);
+// 		rec->p = vec_plu((r.origin),vec_mul(r.dir,t));
+// 	//	rec->n = (vec_plu(rec->p, dot_mul(make_dot(-1,-1,-1), o.o)));
+// 		rec->normal = o.nv;
+// 		return (1);
+// 	}
+// 		return (2);
+// }
 	/*t_vec oc ;vec_make= vec_plu(r.origin, dot_mul(make_dot(-1.0,-1.0,-1.0), o.o));
 	double a = vec_dot(r.dir, r.di;
 	double hb =  vec_dot(oc, r.dir);

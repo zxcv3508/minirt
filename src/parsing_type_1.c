@@ -83,7 +83,6 @@ int		pasing_sp(char **word, t_world **world)
 		//if (!(range_check(sp->c.r, 0, 255) && range_check(sp->c.g, 0, 255) && range_check(sp->c.b, 0, 255) ))
 		//	return (printf("color ") * 0);
 		world_lst_add(&((*world)->object), lst_cre((void *)sp), 1);
-		printf("%f, %f, %f\n",sp->origin.x,sp->origin.y,sp->origin.z);
 		free_split(word);
 		return (1);
 	}

@@ -6,7 +6,7 @@
 /*   By: hyopark <hyopark@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 20:58:07 by hyopark           #+#    #+#             */
-/*   Updated: 2021/04/10 17:35:10 by hyopark          ###   ########.fr       */
+/*   Updated: 2021/04/11 19:09:03 by hyopark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -935,7 +935,7 @@ void	image_rend(t_info *info)
 
 	j = info->world->r.y -1;
 	while (j >= 0)
-	{
+	{ 
 		i = 0;
 		while(i < info->world->r.x)
 		{

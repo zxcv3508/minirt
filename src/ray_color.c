@@ -48,6 +48,8 @@ t_color		get_phong_color(t_world *world, t_ray primary_ray, t_rec *rec)
 		light_list = light_list->next;
 	}
 	light_color = vec_plu(light_color, vec_mul(world->amb.c, world->amb.r)); //global_ambient;??? +? *?
+			printf("lihihtcol : %f,%f,%f\n", light_color.x,light_color.y,light_color.z);
+
 	return (vec_min(vec_pow(light_color, rec->albedo), vec_make(1.0, 1.0, 1.0)));
 }
 
@@ -81,7 +83,8 @@ t_color		ray_get_color(t_world *world,t_ray primary_ray)
 	if (hit(world->object, primary_ray, &rec))//rec-> col : closest hit color 
 	{
 		pixel_color = rec.albedo;
-		//pixel_color = vec_pow(pixel_color, get_phong_color(world, primary_ray, &rec));
+		pixel_color = vec_pow(pixel_color, get_phong_color(world, primary_ray, &rec));
+		printf("phongcol : %f,%f,%f\n", get_phong_color(world, primary_ray, &rec).x,get_phong_color(world, primary_ray, &rec).y,get_phong_color(world, primary_ray, &rec).z);
 	}
 	else
 		pixel_color = vec_make(0.0,1.0,0.0);//get_background_color();//if non-hit : 0,0,0 

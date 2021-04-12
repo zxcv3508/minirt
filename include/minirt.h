@@ -213,7 +213,6 @@ int					hit_type(t_lst *lst, t_ray r, t_rec *rec);
 */
 t_point				ray_at(t_ray *ray, double t);
 int					hit_sph(t_sp o, t_ray r, double t_min, t_rec *rec);
-int					hit_pl(t_pl o, t_ray r, double t_min, t_rec *rec);
 double				hit_tr(t_tr o, t_ray r, double t_min, double t_max, t_rec *rec);
 double				hit_sq(t_sq o, t_ray r, double t_min, double t_max, t_rec *rec);
 double				hit_cy(t_cy o, t_ray r, double t_min, double t_max, t_rec *rec);
@@ -303,6 +302,7 @@ void				render(t_world	*world, t_cam *camera);
 /*
 ** Src is : ../src/render_cam.c
 */
+t_vec				vup(t_vec v);
 void				cam_set(t_world **world,t_cam *camera);
 
 /*

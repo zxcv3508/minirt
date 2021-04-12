@@ -43,8 +43,11 @@ t_ray	make_primary_ray(t_world	*world, t_cam *camera, int i, int j)
 	
 	u = (double)i / (double)(world->resolution.x - 1.0);
 	v = (double)j / (double)(world->resolution.y - 1.0);
-	primary_ray_dir = vec_unit(vec_sub(vec_plu((vec_mul(camera->vertical, u),vec_mul(camera->horizontal, v)),camera->lower_left_corner), camera->look_from));
-	primary_ray = make_ray(camera->look_from, primary_ray_dir);
+	primary_ray_dir = vec_sub(vec_plu(vec_plu(camera->lower_left_corner, (vec_mul(camera->horizontal, u))), vec_mul(camera->vertical, v)), camera->look_from);
+	//primary_ray_dir = vec_unit(vec_sub(vec_plu((vec_mul(camera->vertical, v), vec_mul(camera->horizontal, u)),camera->lower_left_corner), camera->look_from));
+	primary_ray = make_ray(camera->look_from, vec_unit(primary_ray_dir));
+	// if(i ==10 && j ==10)
+	// printf("%f %f\n", u,v);
 	return (primary_ray);
 }
 
