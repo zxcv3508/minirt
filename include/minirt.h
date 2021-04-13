@@ -259,6 +259,7 @@ void				parse_world(t_world *world, char *argv[]);
 ** Src is : ../src/parsing_cam_set.c
 */
 t_vec				vup(t_vec v);
+double				make_degrees(double radians);
 void				cam_set(t_world **world,t_cam *camera);
 
 /*
@@ -340,7 +341,6 @@ void				write_pixel_color_on_mlx_image(t_data *data, int x, int y, int color);
 /*
 ** Src is : ../src/render_util.c
 */
-double				make_degrees(double radians);
 t_vec				check_vup(t_vec v, t_vec nv);
 void				my_mlx_pixel_put(t_data *data, int x, int y, int color);
 int					key_press(int keycode, t_world *world);

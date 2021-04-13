@@ -7,6 +7,10 @@ t_vec	vup(t_vec v)
 		return (vec_make(0,1,0));
 }
 
+double		make_degrees(double radians)
+{
+	return radians * (M_PI/ 180.0);
+}
 
 void		cam_set(t_world **world,t_cam *camera)
 {
