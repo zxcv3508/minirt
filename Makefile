@@ -6,25 +6,31 @@ DEBUG_FLAG = -g3 -fsanitize=address
 LIBFTD = ./lib/libft
 LIBFT = libft.a
 SRC = main.c\
-	minirt.c\
-	vec_util.c\
+	check_argument.c\
 	parsing.c\
-	parsing_type_1.c\
-	parsing_type_2.c\
+	parsing_init_world.c\
+	parsing_cam_set.c\
+	parsing_type_world.c\
+	parsing_type_object.c\
 	parsing_util_tool.c\
 	parsing_util_save.c\
 	parsing_util_free.c\
-	render.c\
-	render_cam.c\
-	render_util.c\
-	hit.c\
-	hit_type.c\
-	lighting.c\
-	ray_color.c\
 	set_mlx.c\
-	check_argument.c\
-	init_world.c\
-
+	render.c\
+	render_util.c\
+	vec_util.c\
+	hit.c\
+	hit_util.c\
+	hit_sp.c\
+	hit_tr.c\
+	hit_sq.c\
+	hit_cy.c\
+	hit_pl.c\
+	ray_get_color.c\
+	ray_phong_lighting.c\
+	ray_shadow.c\
+	ray_make.c\
+	minirt.c\
 
 
 

@@ -1,5 +1,29 @@
 #include "minirt.h"
 
+int		pasing_sp(char **word, t_world **world)
+{
+	t_sp *sp;
+
+	if (!check_word(word, 4))
+	{
+		free_split(word);
+		return (printf("In sp, some ") * 0);
+	}
+	else
+	{
+		sp = (t_sp *)malloc(sizeof(t_sp));
+		sp->origin = save_dot(ft_split(word[1], ','));
+		sp->r = ft_atod(word[2]);
+		sp->c = save_col(ft_split(word[3], ','));
+		//if (!(range_check(sp->c.r, 0, 255) && range_check(sp->c.g, 0, 255) && range_check(sp->c.b, 0, 255) ))
+		//	return (printf("color ") * 0);
+		world_lst_add(&((*world)->object), lst_cre((void *)sp), 1);
+		free_split(word);
+		return (1);
+	}
+	return (0);	
+}
+
 int		pasing_tr(char **word, t_world **world)
 {
 	t_tr *tr;
@@ -12,9 +36,9 @@ int		pasing_tr(char **word, t_world **world)
 	else
 	{
 		tr = (t_tr *)malloc(sizeof(t_tr));
-		tr->f = save_dot(ft_split(word[1], ','));
-		tr->s = save_dot(ft_split(word[2], ','));
-		tr->t = save_dot(ft_split(word[3], ','));
+		tr->p1 = save_dot(ft_split(word[1], ','));
+		tr->p2 = save_dot(ft_split(word[2], ','));
+		tr->p3 = save_dot(ft_split(word[3], ','));
 		tr->c = save_col(ft_split(word[4], ','));
 		world_lst_add(&((*world)->object), lst_cre((void *)tr), 3);
 		free_split(word);

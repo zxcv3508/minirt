@@ -50,9 +50,9 @@ typedef struct	s_light
 
 typedef struct	s_tr
 {
-	t_point	f;
-	t_point	s;
-	t_point	t;
+	t_point	p1;
+	t_point	p2;
+	t_point	p3;
 	t_vec	nv;
 	t_color	c;
 }		t_tr;

@@ -95,9 +95,9 @@ typedef struct		s_light
 
 typedef struct		s_tr
 {
-	t_point			f;
-	t_point			s;
-	t_point			t;
+	t_point			p1;
+	t_point			p2;
+	t_point			p3;
 	t_vec			nv;
 	t_color			c;
 }					t_tr;
@@ -207,31 +207,42 @@ int					check_argument(int ac, char **av);
 /*
 ** Src is : ../src/hit.c
 */
+int 				hit(t_lst *obj_l, t_ray primary_ray, t_rec *rec);
 int					hit_type(t_lst *lst, t_ray r, t_rec *rec);
 
 /*
-** Src is : ../src/hit_type.c
+** Src is : ../src/hit_cy.c
+*/
+
+/*
+** Src is : ../src/hit_pl.c
+*/
+int					hit_pl(t_pl o, t_ray r, double t_min, t_rec *rec);
+
+/*
+** Src is : ../src/hit_sp.c
+*/
+int					hit_sph(t_sp o, t_ray r, double t_min, t_rec *rec);
+
+/*
+** Src is : ../src/hit_sq.c
+*/
+int 				hit_sq(t_sq o, t_ray r, double t_min,  t_rec *rec);
+int					is_inside_square(t_sq *square, t_point p);
+int					is_aligned(t_vec vec);
+
+/*
+** Src is : ../src/hit_tr.c
+*/
+double				hit_tr(t_tr o, t_ray r, double t_min, t_rec *rec);
+int					is_inside(t_point p1, t_point p2, t_point p3, t_point p);
+
+/*
+** Src is : ../src/hit_util.c
 */
 t_point				ray_at(t_ray *ray, double t);
 void				set_face_normal(t_ray *r, t_rec *rec);
 void				get_record(t_rec *rec, double root, void *obj, t_ray *r);
-int					hit_sph(t_sp o, t_ray r, double t_min, t_rec *rec);
-int					hit_pl(t_pl o, t_ray r, double t_min, t_rec *rec);
-double				hit_tr(t_tr o, t_ray r, double t_min, double t_max, t_rec *rec);
-double				hit_sq(t_sq o, t_ray r, double t_min, double t_max, t_rec *rec);
-double				hit_cy(t_cy o, t_ray r, double t_min, double t_max, t_rec *rec);
-
-/*
-** Src is : ../src/init_world.c
-*/
-void				init_world(t_world *world, int argc);
-
-/*
-** Src is : ../src/lighting.c
-*/
-t_vec				vec_ref(t_vec n, t_vec l);
-t_color				make_diffuse(t_ray primary_ray, t_rec *rec, t_light *light);
-t_color				make_spec(t_ray r, t_rec *rec, t_light *light);
 
 /*
 ** Src is : ../src/minirt.c
@@ -245,21 +256,32 @@ t_bool				parse_a_line(char *line, t_world **world);
 void				parse_world(t_world *world, char *argv[]);
 
 /*
-** Src is : ../src/parsing_type_1.c
+** Src is : ../src/parsing_cam_set.c
 */
-int					pasing_c(char **word, t_world **world);
-int					pasing_a(char **word, t_world **world);
-int					pasing_r(char **word, t_world **world);
-int					pasing_sp(char **word, t_world **world);
-int					pasing_l(char **word, t_world **world);
+t_vec				vup(t_vec v);
+void				cam_set(t_world **world,t_cam *camera);
 
 /*
-** Src is : ../src/parsing_type_2.c
+** Src is : ../src/parsing_init_world.c
 */
+void				init_world(t_world *world, int argc);
+
+/*
+** Src is : ../src/parsing_type_object.c
+*/
+int					pasing_sp(char **word, t_world **world);
 int					pasing_tr(char **word, t_world **world);
 int					pasing_sq(char **word, t_world **world);
 int					pasing_pl(char **word, t_world **world);
 int					pasing_cy(char **word, t_world **world);
+
+/*
+** Src is : ../src/parsing_type_world.c
+*/
+int					pasing_c(char **word, t_world **world);
+int					pasing_a(char **word, t_world **world);
+int					pasing_r(char **word, t_world **world);
+int					pasing_l(char **word, t_world **world);
 
 /*
 ** Src is : ../src/parsing_util_free.c
@@ -284,28 +306,36 @@ t_lst				*lstlast(t_lst *lst);
 int					check_word(char **word, int n);
 
 /*
-** Src is : ../src/ray_color.c
+** Src is : ../src/ray_get_color.c
 */
-int					in_shadow(t_lst *obj_list, t_ray shadow_ray, t_light *light);
-t_color				get_phong_light_from(t_world *world, t_ray primary_ray, t_rec *rec, t_light *light);
-t_color				get_phong_color(t_world *world, t_ray primary_ray, t_rec *rec);
-int 				hit(t_lst *obj_l, t_ray primary_ray, t_rec *rec);
-void				rec_init(t_rec *rec);
 t_color				ray_get_color(t_world *world,t_ray primary_ray);
+t_color				get_phong_color(t_world *world, t_ray primary_ray, t_rec *rec);
+t_color				get_phong_light_from(t_world *world, t_ray primary_ray, t_rec *rec, t_light *light);
+
+/*
+** Src is : ../src/ray_make.c
+*/
+t_ray				make_primary_ray(t_world	*world, t_cam *camera, int i, int j);
+t_ray				make_shadow_ray(t_ray primary_ray, t_light *light, t_rec *rec);
+
+/*
+** Src is : ../src/ray_phong_lighting.c
+*/
+t_vec				vec_ref(t_vec n, t_vec l);
+t_color				make_diffuse(t_ray primary_ray, t_rec *rec, t_light *light);
+t_color				make_spec(t_ray primary_ray, t_rec *rec, t_light *light);
+
+/*
+** Src is : ../src/ray_shadow.c
+*/
+int					in_shadow(t_lst *obj_list, t_ray shadow_ray, t_light *light, t_rec *rec);
 
 /*
 ** Src is : ../src/render.c
 */
 void				render(t_world	*world, t_cam *camera);
-t_ray				make_primary_ray(t_world	*world, t_cam *camera, int i, int j);
 int					make_rgb(t_color col);
 void				write_pixel_color_on_mlx_image(t_data *data, int x, int y, int color);
-
-/*
-** Src is : ../src/render_cam.c
-*/
-t_vec				vup(t_vec v);
-void				cam_set(t_world **world,t_cam *camera);
 
 /*
 ** Src is : ../src/render_util.c
