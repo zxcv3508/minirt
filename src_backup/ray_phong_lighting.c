@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ray_phong_lighting.c                               :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: hyopark <hyopark@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/14 21:58:10 by hyopark           #+#    #+#             */
-/*   Updated: 2021/04/14 21:58:11 by hyopark          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minirt.h"
 
 t_vec	vec_ref(t_vec n, t_vec l)
@@ -34,23 +22,28 @@ t_color	make_diffuse(t_ray primary_ray, t_rec *rec, t_light *light)
 
 	r_l.origin = rec->p;
 	r_l.dir = vec_unit(vec_sub((light->origin), (rec->p)));
-	diffuse = vec_mul(light->c, light->r * fmax(vec_dot(vec_unit(rec->normal), r_l.dir), 0.0));
+	// printf("diff dot:%f\n ", vec_dot(vec_unit(rec->normal), r_l.dir));
+	diffuse = vec_mul(light->c, light->r * fmax(vec_dot(vec_unit(rec->normal), r_l.dir),0.0));
 	return (diffuse);
 }
 
 t_color	make_spec(t_ray primary_ray, t_rec *rec, t_light *light)
 {
+	// t_ray	r_l;
 	t_color	specular;
 	double  ks = 0.5;
 	double  ksn = 32.0;
 	double  cos;
 	double  reflected_strength;
-
 	t_vec   light_dir = vec_unit(vec_sub(light->origin, rec->p));
 	t_vec   view_dir = vec_mul(primary_ray.dir, -1.0);
 	t_vec   reflected_dir = vec_unit(vec_ref(rec->normal, light_dir));
+
 	cos = fmax(vec_cos(view_dir, reflected_dir), 0.0);
 	reflected_strength = pow(cos, ksn);
 	specular = vec_mul(vec_mul(light->c, ks), cos);
+	// r_l.origin = rec->p;
+	// r_l.dir = vec_unit(vec_sub((light->origin), (rec->p)));//
+	// specular = vec_mul(light->c, light->r * fmax(pow(vec_dot(vec_ref(rec->normal, r_l.dir), vec_unit(r.dir)),30), 0.0));
 	return (specular);
 }

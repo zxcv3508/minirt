@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hyopark <hyopark@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/14 21:58:02 by hyopark           #+#    #+#             */
+/*   Updated: 2021/04/14 21:58:03 by hyopark          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
 t_bool		parse_a_line(char *line, t_world **world)
@@ -29,7 +41,7 @@ t_bool		parse_a_line(char *line, t_world **world)
 	return (printf("wrong init ") * 0);
 }
 
-void		parse_world(t_world *world, char *argv[])
+int		parse_world(t_world *world, char *argv[])
 {
 	char	*line;
 	int		fd;
@@ -40,9 +52,10 @@ void		parse_world(t_world *world, char *argv[])
 	while (get_next_line(fd, &line))
 	{
 		if(!parse_a_line(line, &world))
-			break ;
+			return (FALSE);
 		free(line);
 	}
 	world->camera_head = world->cam;
 	free(line);
+	return (TRUE);
 }

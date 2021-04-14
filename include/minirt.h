@@ -48,8 +48,8 @@
 #  define SQ 4
 # endif
 
-# ifndef SY
-#  define SY 5
+# ifndef CY
+#  define CY 5
 # endif
 
 typedef int			t_bool;
@@ -120,11 +120,34 @@ typedef struct		s_sq
 typedef struct		s_cy
 {
 	t_point			origin;
-	t_vec			nv;
-	double			d;
-	double			h;
+	t_vec			vec;
+	t_vec			n;
+	double			len;
+	double			r;
 	t_color			c;
 }					t_cy;
+
+typedef struct		s_disc_set
+{
+	t_vec			to_hit;
+	t_vec			p;
+	double			denom;
+	double			t;
+}					t_disc_set;
+
+typedef struct		s_cy_set
+{
+	t_vec			delp;
+	t_vec			nv;
+	t_point			p;
+	double			sqrtd;
+	double			len;
+	double			discriminant;
+	double			root;
+	double			a;
+	double			b;
+	double			c;
+}					t_cy_set;
 
 typedef struct		s_sp
 {
@@ -190,14 +213,43 @@ typedef struct		s_world
 	int				is_save;
 }					t_world;
 
-typedef struct		s_info
+# pragma pack(push, 1)
+typedef struct		s_bmph_file
 {
-	t_world			*world;
-	t_lst			*camera_head;
-	t_data			img;
-	t_vars			vars;
-	int				rgb;
-}					t_info;
+	unsigned char	magic1;
+	unsigned char	magic2;
+	unsigned int	size;
+	unsigned short	reserved1;
+	unsigned short	reserved2;
+	unsigned int	offset;
+}					t_bmph_file;
+
+typedef struct		s_bmph_info
+{
+	unsigned int	size;
+	int				width;
+	int				height;
+	unsigned short	plane;
+	unsigned short	bit_per_pixel;
+	unsigned int	compression;
+	unsigned int	size_image;
+	unsigned int	resolution_x;
+	unsigned int	resolution_y;
+	unsigned int	color_used;
+	unsigned int	color_important;
+}					t_bmph_info;
+
+typedef struct		s_bmph
+{
+	t_bmph_file		file_h;
+	t_bmph_info		info_h;
+}					t_bmph;
+
+# pragma pack(pop)
+/*
+** Src is : ../src/bmp_save.c
+*/
+void				bmp_save(t_world *world);
 
 /*
 ** Src is : ../src/check_argument.c
@@ -207,12 +259,13 @@ int					check_argument(int ac, char **av);
 /*
 ** Src is : ../src/hit.c
 */
-int 				hit(t_lst *obj_l, t_ray primary_ray, t_rec *rec);
+int					hit(t_lst *obj_l, t_ray primary_ray, t_rec *rec);
 int					hit_type(t_lst *lst, t_ray r, t_rec *rec);
 
 /*
 ** Src is : ../src/hit_cy.c
 */
+int					hit_cy(t_cy obj, t_ray r, double t_min, t_rec *rec);
 
 /*
 ** Src is : ../src/hit_pl.c
@@ -227,9 +280,8 @@ int					hit_sph(t_sp o, t_ray r, double t_min, t_rec *rec);
 /*
 ** Src is : ../src/hit_sq.c
 */
-int 				hit_sq(t_sq o, t_ray r, double t_min,  t_rec *rec);
+int					hit_sq(t_sq o, t_ray r, double t_min,  t_rec *rec);
 int					is_inside_square(t_sq *square, t_point p);
-int					is_aligned(t_vec vec);
 
 /*
 ** Src is : ../src/hit_tr.c
@@ -243,17 +295,13 @@ int					is_inside(t_point p1, t_point p2, t_point p3, t_point p);
 t_point				ray_at(t_ray *ray, double t);
 void				set_face_normal(t_ray *r, t_rec *rec);
 void				get_record(t_rec *rec, double root, void *obj, t_ray *r);
-
-/*
-** Src is : ../src/minirt.c
-*/
-int					range_check(t_vec v, double min, double max);
+int					is_aligned(t_vec vec);
 
 /*
 ** Src is : ../src/parsing.c
 */
 t_bool				parse_a_line(char *line, t_world **world);
-void				parse_world(t_world *world, char *argv[]);
+int					parse_world(t_world *world, char *argv[]);
 
 /*
 ** Src is : ../src/parsing_cam_set.c
@@ -301,7 +349,8 @@ void				world_lst_add(t_lst **lst, t_lst *new, int type);
 /*
 ** Src is : ../src/parsing_util_tool.c
 */
-double				ft_atod(char *s);
+int					range_check(t_vec v, double min, double max);
+double				ft_atod(const char *s);
 t_lst				*lst_cre(void *obj);
 t_lst				*lstlast(t_lst *lst);
 int					check_word(char **word, int n);
@@ -353,6 +402,7 @@ void				set_mlx(t_world *world, t_vars *mlx_pointer);
 /*
 ** Src is : ../src/vec_util.c
 */
+double				vec_len_squared(t_vec vec);
 double				vec_size(t_vec vec);
 t_vec				vec_make(double x, double y, double z);
 t_ray				make_ray(t_point o, t_vec dir);

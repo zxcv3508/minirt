@@ -1,18 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   hit_sq.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: hyopark <hyopark@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/14 21:57:38 by hyopark           #+#    #+#             */
-/*   Updated: 2021/04/14 21:57:39 by hyopark          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minirt.h"
 
-int		hit_sq(t_sq o, t_ray r, double t_min,  t_rec *rec)
+int 	hit_sq(t_sq o, t_ray r, double t_min,  t_rec *rec)
 {
 	double			root;
 	t_point			p;
@@ -53,4 +41,15 @@ int		is_inside_square(t_sq *square, t_point p)
 			return (0);
 	}
 	return (1);
+}
+
+int			is_aligned(t_vec vec)
+{
+	if (fabs(vec.x) == 1 && fabs(vec.y) == 0 && fabs(vec.z) == 0)
+		return (100);
+	else if (fabs(vec.x) == 0 && fabs(vec.y) == 1 && fabs(vec.z) == 0)
+		return (101);
+	else if (fabs(vec.x) == 0 && fabs(vec.y) == 0 && fabs(vec.z) == 1)
+		return (102);
+	return (0);
 }

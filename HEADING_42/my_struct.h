@@ -75,11 +75,36 @@ typedef struct	s_sq
 typedef struct	s_cy
 {
 	t_point	origin;
-	t_vec	nv;
-	double	d;
-	double	h;
+	t_vec	vec;
+	t_vec	n;
+	double	len;
+	double	r;
 	t_color	c;
 }		t_cy;
+
+typedef struct	s_disc_set
+{
+	t_vec	to_hit;
+	t_vec	p;
+	double	denom;
+	double	t;
+	
+	
+}		t_disc_set;
+
+typedef struct	s_cy_set
+{
+	t_vec	delp;
+	t_vec	nv;
+	t_point	p;
+	double	sqrtd;
+	double	len;
+	double	discriminant;
+	double	root;
+	double	a;
+	double	b;
+	double	c;
+}		t_cy_set;
 
 typedef struct	s_sp
 {
@@ -145,13 +170,39 @@ typedef struct	s_world
 	int		is_save;
 }		t_world;
 
-typedef struct	s_info
+# pragma pack(push, 1)
+
+typedef struct	s_bmph_file
 {
-	t_world	*world;
-	t_lst	*camera_head;
-	t_data	img;
-	t_vars	vars;
-	int		rgb;
-}		t_info;
+	unsigned char	magic1;
+	unsigned char	magic2;
+	unsigned int	size;
+	unsigned short	reserved1;
+	unsigned short	reserved2;
+	unsigned int	offset;
+}		t_bmph_file;
+
+typedef struct	s_bmph_info
+{
+	unsigned int	size;
+	int				width;
+	int				height;
+	unsigned short	plane;
+	unsigned short	bit_per_pixel;
+	unsigned int	compression;
+	unsigned int	size_image;
+	unsigned int	resolution_x;
+	unsigned int	resolution_y;
+	unsigned int	color_used;
+	unsigned int	color_important;
+}		t_bmph_info;
+
+typedef struct	s_bmph
+{
+	t_bmph_file		file_h;
+	t_bmph_info		info_h;
+}				t_bmph;
+
+# pragma pack(pop)
 
 /* -End- finish!# */

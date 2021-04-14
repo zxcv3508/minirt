@@ -30,7 +30,7 @@ SRC = main.c\
 	ray_phong_lighting.c\
 	ray_shadow.c\
 	ray_make.c\
-	minirt.c\
+	bmp_save.c\
 
 
 
@@ -51,6 +51,7 @@ clean :
 fclean : clean
 		$(MAKE) -C $(LIBFTD) fclean
 		rm -rf $(NAME)
+		rm -rf $(DNAME)
 re : fclean all
 
 debug : $(DNAME)

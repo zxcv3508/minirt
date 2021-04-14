@@ -47,20 +47,20 @@ void		check_argument(int argc, char *argv[])
 	
 }
 
-void		init_world(t_world *world, int argc)
+void		init_world(t_world **world, int argc)
 {
-	world->object = NULL;
-	world->lightight = NULL;
-	world->cam = NULL;
+	(*world)->object = NULL;
+	(*world)->lightight = NULL;
+	(*world)->cam = NULL;
 	if (argc == 3)
-		world->is_save = 1;
+		(*world)->is_save = 1;
 	else
-		world->is_save = 0;
+		(*world)->is_save = 0;
 }
 
 
 
-void		parse_world(t_world *world, char *argv[])
+void		parse_world(t_world **world, char *argv[])
 {
 	char	*line;
 	int		fd;
@@ -69,7 +69,7 @@ void		parse_world(t_world *world, char *argv[])
 	line = NULL;
 	while ((gnl_return = get_next_line(fd, &line)) >= 0)
 	{
-		if(!parse_a_line(line, &world))
+		if(!parse_a_line(line, world))
 			return (0);
 		free(line);
 		if (gnl_return == 0)
@@ -78,7 +78,7 @@ void		parse_world(t_world *world, char *argv[])
 	free(line);
 }
 
-t_bool		parse_a_line(char *line, t_world *world)
+t_bool		parse_a_line(char *line, t_world **world)
 {
 	char	**word;
 

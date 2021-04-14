@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hyopark <hyopark@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/14 21:58:14 by hyopark           #+#    #+#             */
+/*   Updated: 2021/04/14 21:58:15 by hyopark          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
 void		render(t_world	*world, t_cam *camera)
@@ -16,11 +28,8 @@ void		render(t_world	*world, t_cam *camera)
 		i = -1;
 		while(++i < width)
 		{
-			// if (i == 400 && j == 400)
-			// {
 				pixel_color = ray_get_color(world, make_primary_ray(world, camera, i, j));
-				write_pixel_color_on_mlx_image(world->mlx_pointer->image, i, j, make_rgb(pixel_color));//		my_mlx_pixel_put(&(info->img),i,j,info->rgb);
-			// }
+				write_pixel_color_on_mlx_image(world->mlx_pointer->image, i, j, make_rgb(pixel_color));
 		}
 	}
 	mlx_put_image_to_window(world->mlx_pointer->mlx, world->mlx_pointer->win, world->mlx_pointer->image->img, 0, 0);
