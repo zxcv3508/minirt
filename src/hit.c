@@ -6,7 +6,7 @@
 /*   By: hyopark <hyopark@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 21:57:43 by hyopark           #+#    #+#             */
-/*   Updated: 2021/04/14 21:57:44 by hyopark          ###   ########.fr       */
+/*   Updated: 2021/04/15 13:43:54 by hyopark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int		hit(t_lst *obj_l, t_ray primary_ray, t_rec *rec)
 {
-	int is_hit;
-	
-	t_lst *tmp_obj;
+	int		is_hit;
+	t_lst	*tmp_obj;
+
 	tmp_obj = obj_l;
 	is_hit = 0;
 	while (tmp_obj)
@@ -29,7 +29,7 @@ int		hit(t_lst *obj_l, t_ray primary_ray, t_rec *rec)
 
 int		hit_type(t_lst *lst, t_ray r, t_rec *rec)
 {
- 	if (lst->type == SP)
+	if (lst->type == SP)
 		return (hit_sph(*((t_sp *)lst->obj), r, 0, rec));
 	if (lst->type == PL)
 		return (hit_pl(*((t_pl *)(lst->obj)), r, 0, rec));

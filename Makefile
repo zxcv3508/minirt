@@ -18,7 +18,11 @@ SRC = main.c\
 	set_mlx.c\
 	render.c\
 	render_util.c\
-	vec_util.c\
+	vec_util_common.c\
+	vec_util_trigonometric.c\
+	vec_util_calculations.c\
+	vec_util_compare.c\
+	vec_util_product.c\
 	hit.c\
 	hit_util.c\
 	hit_sp.c\

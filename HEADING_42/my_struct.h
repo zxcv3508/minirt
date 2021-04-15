@@ -106,6 +106,17 @@ typedef struct	s_cy_set
 	double	c;
 }		t_cy_set;
 
+typedef struct	s_sp_set
+{
+	t_vec	oc;
+	double	root;
+	double	sqrted; 
+	double	a;
+	double	hb;
+	double	c;
+	double	d;
+}		t_sp_set;
+
 typedef struct	s_sp
 {
 	t_point	origin;

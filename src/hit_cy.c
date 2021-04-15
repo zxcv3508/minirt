@@ -6,13 +6,13 @@
 /*   By: hyopark <hyopark@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 21:57:31 by hyopark           #+#    #+#             */
-/*   Updated: 2021/04/14 21:57:32 by hyopark          ###   ########.fr       */
+/*   Updated: 2021/04/15 13:34:46 by hyopark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-static t_cy_set		get_cy_discriminant(t_cy *obj, t_ray *r)
+static t_cy_set	get_cy_discriminant(t_cy *obj, t_ray *r)
 {
 	t_cy_set		cy;
 
@@ -31,15 +31,17 @@ static t_cy_set		get_cy_discriminant(t_cy *obj, t_ray *r)
 	return (cy);
 }
 
-static int			get_obj_far_hitpoint(t_cy_set *cy_set, t_ray *r, t_cy *obj)
+static int		get_obj_far_hitpoint(t_cy_set *cy_set, t_ray *r, t_cy *obj)
 {
+	t_ray ray;
+
 	cy_set->root = (-cy_set->b + cy_set->sqrtd) / cy_set->a;
 	cy_set->p = ray_at(r, cy_set->root);
 	if ((cy_set->len = vec_dot(vec_sub(cy_set->p, obj->origin), obj->vec)) < 0)
 		return (FALSE);
 	if (cy_set->len <= obj->len)
 	{
-		t_ray ray = make_ray(obj->origin, obj->vec);
+		ray = make_ray(obj->origin, obj->vec);
 		cy_set->nv = vec_unit(vec_sub(cy_set->p,
 				ray_at(&ray, cy_set->len)));
 	}
@@ -48,8 +50,11 @@ static int			get_obj_far_hitpoint(t_cy_set *cy_set, t_ray *r, t_cy *obj)
 	return (TRUE);
 }
 
-static	int			get_cy_hitpoint(t_cy_set *cy_set, t_rec *rec, t_ray *r, t_cy *obj)
+static	int		get_cy_hitpoint(t_cy_set *cy_set,
+	t_rec *rec, t_ray *r, t_cy *obj)
 {
+	t_ray ray;
+
 	if (cy_set->discriminant < 0)
 		return (FALSE);
 	cy_set->sqrtd = sqrt(cy_set->discriminant);
@@ -61,7 +66,7 @@ static	int			get_cy_hitpoint(t_cy_set *cy_set, t_rec *rec, t_ray *r, t_cy *obj)
 		return (FALSE);
 	if (cy_set->len <= obj->len && cy_set->len > 0)
 	{
-		t_ray ray = make_ray(obj->origin, obj->vec);
+		ray = make_ray(obj->origin, obj->vec);
 		cy_set->nv = vec_unit(vec_sub(cy_set->p, ray_at(&ray, cy_set->len)));
 	}
 	else
@@ -72,7 +77,7 @@ static	int			get_cy_hitpoint(t_cy_set *cy_set, t_rec *rec, t_ray *r, t_cy *obj)
 	return (TRUE);
 }
 
-int					hit_cy(t_cy obj, t_ray r, double t_min, t_rec *rec)
+int				hit_cy(t_cy obj, t_ray r, double t_min, t_rec *rec)
 {
 	t_cy_set		cy_set;
 

@@ -6,7 +6,7 @@
 /*   By: hyopark <hyopark@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 21:57:53 by hyopark           #+#    #+#             */
-/*   Updated: 2021/04/14 21:57:54 by hyopark          ###   ########.fr       */
+/*   Updated: 2021/04/15 13:03:08 by hyopark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int		pasing_c(char **word, t_world **world)
 		free_split(word);
 		return (1);
 	}
-	return (0);	
+	return (0);
 }
 
 int		pasing_a(char **word, t_world **world)
@@ -57,12 +57,11 @@ int		pasing_a(char **word, t_world **world)
 		free_split(word);
 		return (1);
 	}
-	return (0);	
+	return (0);
 }
 
 int		pasing_r(char **word, t_world **world)
 {
-
 	if (!check_word(word, 3))
 	{
 		free_split(word);
@@ -74,9 +73,9 @@ int		pasing_r(char **word, t_world **world)
 	{
 		(*world)->resolution.x = ft_atod(word[1]);
 		(*world)->resolution.y = ft_atod(word[2]);
-		if ((*world)->resolution.x >1920)
+		if ((*world)->resolution.x > 1920)
 			(*world)->resolution.x = 1920;
-		if ((*world)->resolution.y >1080)
+		if ((*world)->resolution.y > 1080)
 			(*world)->resolution.y = 1080;
 		free_split(word);
 		return (1);
@@ -107,5 +106,5 @@ int		pasing_l(char **word, t_world **world)
 		free_split(word);
 		return (1);
 	}
-	return (0);	
+	return (0);
 }

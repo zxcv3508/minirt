@@ -6,7 +6,7 @@
 /*   By: hyopark <hyopark@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 21:58:02 by hyopark           #+#    #+#             */
-/*   Updated: 2021/04/14 21:58:03 by hyopark          ###   ########.fr       */
+/*   Updated: 2021/04/15 13:32:32 by hyopark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_bool		parse_a_line(char *line, t_world **world)
 
 	if (!*line)
 		return (1);
-	word = ft_split(line,' ');
+	word = ft_split(line, ' ');
 	if (!ft_strncmp(*word, "R", 1))
 		return (pasing_r(word, world));
 	else if (!ft_strncmp(*word, "A", 1))
@@ -41,7 +41,7 @@ t_bool		parse_a_line(char *line, t_world **world)
 	return (printf("wrong init ") * 0);
 }
 
-int		parse_world(t_world *world, char *argv[])
+int			parse_world(t_world *world, char *argv[])
 {
 	char	*line;
 	int		fd;
@@ -51,7 +51,7 @@ int		parse_world(t_world *world, char *argv[])
 	fd = open(argv[1], O_RDONLY);
 	while (get_next_line(fd, &line))
 	{
-		if(!parse_a_line(line, &world))
+		if (!parse_a_line(line, &world))
 			return (FALSE);
 		free(line);
 	}

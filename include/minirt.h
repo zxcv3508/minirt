@@ -149,6 +149,17 @@ typedef struct		s_cy_set
 	double			c;
 }					t_cy_set;
 
+typedef struct		s_sp_set
+{
+	t_vec			oc;
+	double			root;
+	double			sqrted; 
+	double			a;
+	double			hb;
+	double			c;
+	double			d;
+}					t_sp_set;
+
 typedef struct		s_sp
 {
 	t_point			origin;
@@ -280,7 +291,7 @@ int					hit_sph(t_sp o, t_ray r, double t_min, t_rec *rec);
 /*
 ** Src is : ../src/hit_sq.c
 */
-int					hit_sq(t_sq o, t_ray r, double t_min,  t_rec *rec);
+int					hit_sq(t_sq o, t_ray r, double t_min, t_rec *rec);
 int					is_inside_square(t_sq *square, t_point p);
 
 /*
@@ -308,7 +319,7 @@ int					parse_world(t_world *world, char *argv[]);
 */
 t_vec				vup(t_vec v);
 double				make_degrees(double radians);
-void				cam_set(t_world **world,t_cam *camera);
+void				cam_set(t_world **world, t_cam *camera);
 
 /*
 ** Src is : ../src/parsing_init_world.c
@@ -345,12 +356,12 @@ void				free_world(t_world *world);
 t_color				save_col(char **splited);
 t_point				save_dot(char **splited);
 void				world_lst_add(t_lst **lst, t_lst *new, int type);
+double				ft_atod(const char *s);
 
 /*
 ** Src is : ../src/parsing_util_tool.c
 */
 int					range_check(t_vec v, double min, double max);
-double				ft_atod(const char *s);
 t_lst				*lst_cre(void *obj);
 t_lst				*lstlast(t_lst *lst);
 int					check_word(char **word, int n);
@@ -358,15 +369,17 @@ int					check_word(char **word, int n);
 /*
 ** Src is : ../src/ray_get_color.c
 */
-t_color				ray_get_color(t_world *world,t_ray primary_ray);
+t_color				ray_get_color(t_world *world, t_ray primary_ray);
 t_color				get_phong_color(t_world *world, t_ray primary_ray, t_rec *rec);
-t_color				get_phong_light_from(t_world *world, t_ray primary_ray, t_rec *rec, t_light *light);
+t_color				get_phong_light_from(t_world *world, t_ray primary_ray,
+								t_rec *rec, t_light *light);
 
 /*
 ** Src is : ../src/ray_make.c
 */
-t_ray				make_primary_ray(t_world	*world, t_cam *camera, int i, int j);
+t_ray				make_primary_ray(t_world *world, t_cam *camera, int i, int j);
 t_ray				make_shadow_ray(t_ray primary_ray, t_light *light, t_rec *rec);
+t_ray				make_ray(t_point o, t_vec dir);
 
 /*
 ** Src is : ../src/ray_phong_lighting.c
@@ -383,14 +396,13 @@ int					in_shadow(t_lst *obj_list, t_ray shadow_ray, t_light *light, t_rec *rec)
 /*
 ** Src is : ../src/render.c
 */
-void				render(t_world	*world, t_cam *camera);
+void				render(t_world *world, t_cam *camera);
 int					make_rgb(t_color col);
 void				write_pixel_color_on_mlx_image(t_data *data, int x, int y, int color);
 
 /*
 ** Src is : ../src/render_util.c
 */
-t_vec				check_vup(t_vec v, t_vec nv);
 void				my_mlx_pixel_put(t_data *data, int x, int y, int color);
 int					key_press(int keycode, t_world *world);
 
@@ -400,22 +412,37 @@ int					key_press(int keycode, t_world *world);
 void				set_mlx(t_world *world, t_vars *mlx_pointer);
 
 /*
-** Src is : ../src/vec_util.c
+** Src is : ../src/vec_util_calculations.c
+*/
+t_vec				vec_pow(t_vec d1, t_vec d2);
+t_vec				vec_mul(t_vec v, double r);
+t_vec				vec_plu(t_vec v1, t_vec v2);
+t_vec				vec_sub(t_vec v1, t_vec v2);
+
+/*
+** Src is : ../src/vec_util_common.c
 */
 double				vec_len_squared(t_vec vec);
 double				vec_size(t_vec vec);
 t_vec				vec_make(double x, double y, double z);
-t_ray				make_ray(t_point o, t_vec dir);
 t_vec				vec_unit(t_vec v);
-t_vec				vec_pow(t_vec d1, t_vec d2);
-t_vec				vec_mul(t_vec v, double r);
-double				vec_dot(t_vec v1, t_vec v2);
-t_vec				vec_cro(t_vec v1, t_vec v2);
-t_vec				vec_plu(t_vec v1, t_vec v2);
+
+/*
+** Src is : ../src/vec_util_compare.c
+*/
 t_vec				vec_max(t_vec v1, t_vec v2);
 t_vec				vec_min(t_vec v1, t_vec v2);
+
+/*
+** Src is : ../src/vec_util_product.c
+*/
+double				vec_dot(t_vec v1, t_vec v2);
+t_vec				vec_cro(t_vec v1, t_vec v2);
+
+/*
+** Src is : ../src/vec_util_trigonometric.c
+*/
 double				vec_cos(t_vec v1, t_vec v2);
 double				vec_sin(t_vec v1, t_vec v2);
-t_vec				vec_sub(t_vec v1, t_vec v2);
 
 #endif

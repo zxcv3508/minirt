@@ -6,7 +6,7 @@
 /*   By: hyopark <hyopark@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 21:57:28 by hyopark           #+#    #+#             */
-/*   Updated: 2021/04/14 21:57:29 by hyopark          ###   ########.fr       */
+/*   Updated: 2021/04/15 13:42:41 by hyopark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,4 +27,3 @@ int		check_argument(int ac, char **av)
 		printf("not .rt file");
 	return (0);
 }
-

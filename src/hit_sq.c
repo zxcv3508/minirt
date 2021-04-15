@@ -6,13 +6,13 @@
 /*   By: hyopark <hyopark@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 21:57:38 by hyopark           #+#    #+#             */
-/*   Updated: 2021/04/14 21:57:39 by hyopark          ###   ########.fr       */
+/*   Updated: 2021/04/15 13:35:29 by hyopark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-int		hit_sq(t_sq o, t_ray r, double t_min,  t_rec *rec)
+int		hit_sq(t_sq o, t_ray r, double t_min, t_rec *rec)
 {
 	double			root;
 	t_point			p;

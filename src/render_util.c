@@ -6,21 +6,13 @@
 /*   By: hyopark <hyopark@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 21:58:12 by hyopark           #+#    #+#             */
-/*   Updated: 2021/04/14 21:58:13 by hyopark          ###   ########.fr       */
+/*   Updated: 2021/04/15 13:04:29 by hyopark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-t_vec		check_vup(t_vec v, t_vec nv)
-{
-	//if(vec_dot(v,nv) == 0.0)
-//	{
-//		return (vec_make(1,0,0));
-//	}
-	return (v);
-}
 
-void			my_mlx_pixel_put(t_data *data, int x, int y, int color)
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
 	char	*dst;
 
@@ -37,16 +29,15 @@ int		key_press(int keycode, t_world *world)
 	head = world->camera_head;
 	if (keycode == KEY_D)
 	{
-	
 		if (c_l->next != NULL)
 		{
 			c_l = c_l->next;
-			world->cam= world->cam->next;
+			world->cam = world->cam->next;
 			render(world, (t_cam *)(c_l->obj));
 		}
 		else
 		{
-			c_l = world->camera_head;;
+			c_l = world->camera_head;
 			world->cam = world->camera_head;
 			render(world, (t_cam *)(c_l->obj));
 		}
